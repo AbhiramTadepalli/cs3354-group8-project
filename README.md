@@ -8,7 +8,7 @@ Team #8
 
 - Nidhi Majoju
 - Harshavarthan Mathapati
-- xxxx xxxx
+- Nishant Bhagat
 - xxxx xxxx
 - xxxx xxxx
 - xxxx xxxx
