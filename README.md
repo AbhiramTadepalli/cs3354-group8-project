@@ -7,7 +7,7 @@ Team #8
 <br><h4>Team names:</h4>
 
 - Nidhi Majoju
-- xxxx xxxx
+- Harshavarthan Mathapati
 - xxxx xxxx
 - xxxx xxxx
 - xxxx xxxx
@@ -48,9 +48,9 @@ Scalability Issues
 Data Security and Privacy
 
 Milestones/Due Dates:
-Phase 1: Statement of Work …………………………………………………Due: February 16, 2025
-Phase 2: System Modeling ..…………………………………………………Due: February 23, 2025
-Phase 3: Architecture Design ………………………………………………..Due: March 9, 2025
-Phase 4: Integration Work ……………………………………………………Due: March 30, 2025
-Phase 5: Complete and Prepare Presentation ………………………………....Due: April 13, 2025
-Phase 6: Project Presentation ………………………………………………….Due: May 5 - 7, 2025
+<br>Phase 1: Statement of Work …………………………………………………Due: February 16, 2025
+<br>Phase 2: System Modeling ..…………………………………………………Due: February 23, 2025
+<br>Phase 3: Architecture Design ………………………………………………..Due: March 9, 2025
+<br>Phase 4: Integration Work ……………………………………………………Due: March 30, 2025
+<br>Phase 5: Complete and Prepare Presentation ………………………………....Due: April 13, 2025
+<br>Phase 6: Project Presentation ………………………………………………….Due: May 5 - 7, 2025
