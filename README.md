@@ -10,7 +10,7 @@ Team #8
 - Harshavarthan Mathapati
 - Nishant Bhagat
 - Manaar Quadri
-- xxxx xxxx
+- Swayam Arora
 - xxxx xxxx
 - xxxx xxxx
 - xxxx xxxx
@@ -19,14 +19,13 @@ Team #8
 
 Project Description: CometConnect is a web based application that connects students and faculty members at the University of Texas At Dallas (UTD) with active research opportunities. The platform offers two primary user endpoints to facilitate this process.
 
-
-The first endpoint is intended for students, maintaining an up-to-date list of current research opportunities at UTD. Students can explore each and apply for available positions directly. The second endpoint is for professors and UTD staff with administrative access to manage and update active research positions. This feature allows faculty members to post new opportunities, manage existing offerings, and access a detailed list of all applicants.  
+The first endpoint is intended for students, maintaining an up-to-date list of current research opportunities at UTD. Students can explore each and apply for available positions directly. The second endpoint is for professors and UTD staff with administrative access to manage and update active research positions. This feature allows faculty members to post new opportunities, manage existing offerings, and access a detailed list of all applicants.
 
 Objectives/Purpose: The rising academic research needs and expanding student and faculty research involvement have made it essential to optimize student research matching opportunities. Traditional methods such as relying on word-of-mouth, or email communication are no longer sufficient to handle the volume of these opportunities. These outdated systems lack proper organization, making it difficult for students to discover available positions and for professors to manage applicants effectively.
 
 CometConnect aims to create a centralized platform that benefits both students seeking research experience and professors looking for talented researchers to join their projects, facilitating organization and communication in academic research.
 
-Targeted Users: University of Texas at Dallas faculty involved in research and students at this university are the targeted users. More specifically, this product targets professors interested in hiring students to work in their lab and students interested in joining a research lab. Our product helps combine their interests by allowing students to apply for open positions in faculty labs. 
+Targeted Users: University of Texas at Dallas faculty involved in research and students at this university are the targeted users. More specifically, this product targets professors interested in hiring students to work in their lab and students interested in joining a research lab. Our product helps combine their interests by allowing students to apply for open positions in faculty labs.
 
 Scope and Tasks:
 User Login
@@ -37,7 +36,7 @@ Application management
 Role based access control (student & faculty)
 
 Future Scope/ Stretch Goals (Optional):
-Ratings and Reviews: rate research experience 
+Ratings and Reviews: rate research experience
 Application Status Filtering: filter applications by status
 Bookmarking research opportunities
 UTD System Integration: sync with university research databases
