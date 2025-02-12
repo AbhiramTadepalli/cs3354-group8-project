@@ -12,7 +12,7 @@ Team #8
 - Manaar Quadri
 - Swayam Arora
 - Shreya Gundavelli
-- xxxx xxxx
+- Blend Ahmed
 - xxxx xxxx
 
 <h4>Statement of Work: </h4>
