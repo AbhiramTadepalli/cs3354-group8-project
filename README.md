@@ -9,7 +9,7 @@ Team #8
 - Nidhi Majoju
 - Harshavarthan Mathapati
 - Nishant Bhagat
-- xxxx xxxx
+- Manaar Quadri
 - xxxx xxxx
 - xxxx xxxx
 - xxxx xxxx
