@@ -48,8 +48,8 @@ Data Security and Privacy
 
 Milestones/Due Dates:
 <br>Phase 1: Statement of Work …………………………………………………Due: February 16, 2025
-<br>Phase 2: System Modeling ..…………………………………………………Due: February 23, 2025
-<br>Phase 3: Architecture Design ………………………………………………..Due: March 9, 2025
-<br>Phase 4: Integration Work ……………………………………………………Due: March 30, 2025
-<br>Phase 5: Complete and Prepare Presentation ………………………………....Due: April 13, 2025
-<br>Phase 6: Project Presentation ………………………………………………….Due: May 5 - 7, 2025
+<br>Phase 2: System Modeling ..…………………………………………………Due: March 2, 2025
+<br>Phase 3: Architecture Design ………………………………………………..Due: March 16, 2025
+<br>Phase 4: Integration Work ……………………………………………………Due: April 6, 2025
+<br>Phase 5: Complete and Prepare Presentation ………………………………....Due: April 20, 2025
+<br>Phase 6: Project Presentation ………………………………………………….Due: April 27, 2025
