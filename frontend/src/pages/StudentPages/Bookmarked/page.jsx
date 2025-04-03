@@ -44,8 +44,8 @@ const Bookmarked = () => {
       <NavBarStudent />
     
     <div className="pb-8 pl-8 pr-8">
-      {/* Bookmarked Applications Header */}
-      <h1 className="text-4xl font-bold font-normal mb-4">Bookmarked Applications</h1>
+      {/* Bookmarked Posts Header */}
+      <h1 className="text-4xl font-bold font-normal mb-4">Bookmarked Posts</h1>
 
       <table className="w-full border-separate border-spacing-y-2">
         <thead>
