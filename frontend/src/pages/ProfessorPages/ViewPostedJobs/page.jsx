@@ -63,9 +63,9 @@ const ViewPostedJobs = () => {
             </tr>
           </thead>
           <tbody className="bg-orange_clr">
-            {/* Tracked Applications */}
+            {/* Posted Jobs */}
             {dummyStudentApplications.map((job) => (
-              /* Each row is an application of the student */
+              /* Each row is a Job the professor has posted */
               <tr key={job.postID} className="text-lg text-center border-b">
                 <td className="p-2 text-center">
                   <img
