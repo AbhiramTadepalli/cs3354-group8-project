@@ -89,7 +89,7 @@ const TrackApplication = () => {
                   <button onClick={() => console.log("navigate")} /* Need to implement navigation logic */
                     className="px-4 py-2 text-dark_pink_clr rounded"
                   >
-                    View Applications
+                    View Application
                   </button>
                 </td>
               </tr>
