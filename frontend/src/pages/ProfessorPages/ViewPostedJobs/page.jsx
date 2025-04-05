@@ -44,7 +44,7 @@ const ViewPostedJobs = () => {
     <>
       <NavBarStudent></NavBarStudent>
       <div className="pb-8 pl-8 pr-8">
-        <h1 className="text-4xl font-bold mb-4">Track Applications</h1>
+        <h1 className="text-4xl font-bold mb-4">View Posted Jobs</h1>
 
         <table className="w-full border-separate border-spacing-y-3 px-12">
           <thead>
