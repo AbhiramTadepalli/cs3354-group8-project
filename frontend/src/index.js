@@ -24,7 +24,8 @@ import EditProfProfile from './pages/ProfessorPages/editProfProfile/page';
 import ViewProfProfile from './pages/ProfessorPages/viewProfProfile/page';
 import MyApplications from './pages/ProfessorPages/myApplications/page';
 import ViewPostedJobs from './pages/ProfessorPages/ViewPostedJobs/page';
-import ViewStudentApplications from './pages/ProfessorPages/viewStudentApplications/page';
+import ViewJob from './pages/ProfessorPages/ViewJob/page.jsx';
+import ViewStudentApplication from './pages/ProfessorPages/viewStudentApplication/page';
 import ViewStudentResponse from './pages/ProfessorPages/ViewStudentResponse/page';
 
 
@@ -54,7 +55,8 @@ root.render(
       <Route path = "/editProfProfile" element = {<EditProfProfile/>} />
       <Route path = "/viewProfProfile" element = {<ViewProfProfile/>} />
       <Route path = "/viewPostedJobs" element = {<ViewPostedJobs/>} />
-      <Route path = "/viewStudentApplications" element = {<ViewStudentApplications/>} />
+      <Route path = "/job_id" element = {<ViewJob/>} />
+      <Route path = "/job_id/app_id" element = {<ViewStudentApplication/>} />
       <Route path = "/ViewStudentResponse" element = {<ViewStudentResponse/>} />
       <Route path = "/myApplications" element = {<MyApplications/>} />
 

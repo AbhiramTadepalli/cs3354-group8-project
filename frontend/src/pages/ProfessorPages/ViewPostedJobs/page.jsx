@@ -3,7 +3,7 @@ import NavBarStudent from "../../../Components/NavBarStudent";
 
 const ViewPostedJobs = () => {
 
-  const dummyStudentApplications = [
+  const dummyJobPostings = [
     {
       profilePicUrl: "",
       datePosted: "04/02/2025",
@@ -56,7 +56,7 @@ const ViewPostedJobs = () => {
               <th className="text-center w-32">Date Posted</th>
               <th className="text-center w-32">Job ID</th>
               <th className="text-center w-32">Role</th>
-              <th className="text-center w-20">Applied</th>
+              <th className="text-center w-32">Applied</th>
               <th className="text-center w-32">Accepted</th>
               <th className="text-center w-32">Rejected</th>
               <th className="text-center w-32"></th> {/* Blank column header, but columns have a button/hyperlink */}
@@ -64,7 +64,7 @@ const ViewPostedJobs = () => {
           </thead>
           <tbody className="bg-orange_clr">
             {/* Posted Jobs */}
-            {dummyStudentApplications.map((job) => (
+            {dummyJobPostings.map((job) => (
               /* Each row is a Job the professor has posted */
               <tr key={job.postID} className="text-lg text-center border-b">
                 <td className="p-2 text-center">
