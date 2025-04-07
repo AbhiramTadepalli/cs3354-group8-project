@@ -8,7 +8,7 @@ const ViewPostedJobs = () => {
       appID: "",
       profilePicUrl: "",
       dateApplied: "04/02/2025",
-      jobTitle: 'Job #1',
+      student: 'Hank Pym',
       graduation: 'Fall 2025',
       exp: '2 semesters',
       major: 'Computer Science',
@@ -20,7 +20,7 @@ const ViewPostedJobs = () => {
       appID: "",
       profilePicUrl: "",
       dateApplied: "03/22/2025",
-      jobTitle: 'Job #2',
+      student: 'Peter Parker',
       graduation: 'Fall 2026',
       exp: '1 semester',
       major: 'Data Science',
@@ -32,7 +32,7 @@ const ViewPostedJobs = () => {
       appID: "",
       profilePicUrl: "",
       dateApplied: "04/05/2025",
-      jobTitle: 'Job #3',
+      student: 'Sandy Cooper',
       graduation: 'Spring 2025',
       exp: 'None',
       major: 'Mathematics',
@@ -56,7 +56,7 @@ const ViewPostedJobs = () => {
             <tr className="text-sm text-gray-600">
               {/* Table header column names */}
               <th className="pl-2 w-12"></th>
-              <th className="text-center w-32">Job Title</th>
+              <th className="text-center w-32">Student</th>
               <th className="text-center w-32">Date Applied</th>
               <th className="text-center w-32">Graduation</th>
               <th className="text-center w-32">Research Experience</th>
@@ -68,25 +68,25 @@ const ViewPostedJobs = () => {
           </thead>
           <tbody className="bg-orange_clr">
             {/* Posted Jobs */}
-            {dummyApplications.map((job) => (
+            {dummyApplications.map((application) => (
               /* Each row is a Student Application for the Job */
-              <tr key={job.appID} className="text-lg text-center border-b">
+              <tr key={application.appID} className="text-lg text-center border-b">
                 <td className="p-2 text-center">
                   <img
-                    src={job.profilePicUrl}
+                    src={application.profilePicUrl}
                     alt="Profile"
                     className="w-10 h-10 rounded-full"
                   />
                 </td>
-                <td className="p-2">{job.jobTitle}</td>
-                <td className="p-2">{job.dateApplied}</td>
-                <td className="p-2">{job.graduation}</td>
-                <td className="p-2 text-sm">{job.exp}</td>
-                <td className="p-2">{job.major}</td>
-                <td className="p-2">{job.weeklyHours}</td>
+                <td className="p-2">{application.student}</td>
+                <td className="p-2">{application.dateApplied}</td>
+                <td className="p-2">{application.graduation}</td>
+                <td className="p-2 text-sm">{application.exp}</td>
+                <td className="p-2">{application.major}</td>
+                <td className="p-2">{application.weeklyHours}</td>
                 <td className="flex justify-center items-center p-2">
                   <div className='rounded rounded-3xl w-fit p-2 px-4 bg-light_pink_clr'>
-                    {job.status}
+                    {application.status}
                   </div>
                 </td>
                 <td className="p-2 text-right pr-8">
