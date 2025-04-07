@@ -1,3 +1,5 @@
+// Manaar Quadri
+// This is the use case to view student profile
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBarStudent from '../../../Components/NavBarStudent';
