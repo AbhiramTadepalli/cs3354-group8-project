@@ -3,6 +3,7 @@ import { FiSearch, FiChevronDown } from "react-icons/fi";
 import NavBar from "../../../Components/NavBarStudent";
 
 const TrackApplication = () => {
+  //sample data for applications
   const applicationData = [
     {
       id: "123456",

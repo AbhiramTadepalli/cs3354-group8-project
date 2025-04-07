@@ -1,38 +1,47 @@
 import React, { useState, useRef } from "react";
-import { FiSearch, FiPaperclip } from "react-icons/fi";
-import NavBar from "../../../Components/NavBarStudent";
+import { FiSearch, FiPaperclip } from "react-icons/fi"; // Importing icons for UI
+import NavBar from "../../../Components/NavBarStudent"; // Importing the navigation bar component for students
 
 const ApplyToPosition = () => {
+  // Reference for the file input element
   const fileInputRef = useRef(null);
+
+  // State to manage form data
   const [formData, setFormData] = useState({
-    research_experience: "",
-    hours_per_week: "",
-    basic_student_response: "",
+    research_experience: "", // Number of semesters of research experience
+    hours_per_week: "", // Available hours per week
+    basic_student_response: "", // Student's response describing their skills and interest
   });
+
+  // State to manage the uploaded resume file
   const [resumeFile, setResumeFile] = useState(null);
 
+  // Handler for input field changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; // Extracting name and value from the input
     setFormData({
-      ...formData,
-      [name]: value,
+      ...formData, // Spread existing form data
+      [name]: value, // Update the specific field
     });
   };
 
+  // Handler for file input changes
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
-      setResumeFile(e.target.files[0]);
+      setResumeFile(e.target.files[0]); // Set the selected file in state
     }
   };
 
+  // Handler to trigger the hidden file input when "Attach Resume" is clicked
   const handleAttachClick = () => {
-    fileInputRef.current.click();
+    fileInputRef.current.click(); // Programmatically click the file input
   };
 
+  // Handler for form submission
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
 
-    // Create FormData object for file upload
+    // Create FormData object to handle file uploads
     const submitData = new FormData();
     submitData.append("research_experience", formData.research_experience);
     submitData.append("hours_per_week", formData.hours_per_week);
@@ -42,16 +51,19 @@ const ApplyToPosition = () => {
     );
 
     if (resumeFile) {
-      submitData.append("resume", resumeFile);
+      submitData.append("resume", resumeFile); // Append the resume file if it exists
     }
 
+    // Log the form data and resume file (placeholder for API call)
     console.log("Form submitted:", formData);
     console.log("Resume file:", resumeFile);
-    // Here you would make your API call to submit the form data and file
-    // axios.post('/api/submit-application', submitData)
+
+    // TODO: Add API call to submit the form data
   };
+
   return (
     <div className="min-h-screen bg-background_clr p-6">
+      {/* Navigation bar for students */}
       <NavBar />
 
       {/* Main content area */}
@@ -68,6 +80,7 @@ const ApplyToPosition = () => {
             <strong>Deadline: April 1, 2025</strong>
           </p>
 
+          {/* Job description */}
           <p className="mb-4">
             As a Machine Learning Research Assistant, you will support the
             development and evaluation of machine learning models by assisting
@@ -84,6 +97,7 @@ const ApplyToPosition = () => {
             methods are essential for this role.
           </p>
 
+          {/* Additional job details */}
           <div className="mb-4">
             <p className="font-bold mb-1">Hours: 10-15 hours per week</p>
             <p className="font-bold mb-1">Term: Spring 2025</p>
@@ -91,6 +105,7 @@ const ApplyToPosition = () => {
             <p className="font-bold mb-1">Compensation: $15/hr</p>
           </div>
 
+          {/* Job requirements */}
           <div>
             <h2 className="font-bold mb-1">Requirements</h2>
             <ul className="list-disc ml-6">
@@ -128,6 +143,7 @@ const ApplyToPosition = () => {
         >
           <h2 className="text-xl font-bold mb-4">Application Form</h2>
 
+          {/* Research experience input */}
           <div className="mb-4">
             <label
               className="block text-gray-700 mb-2"
@@ -147,6 +163,7 @@ const ApplyToPosition = () => {
             />
           </div>
 
+          {/* Available hours input */}
           <div className="mb-4">
             <label
               className="block text-gray-700 mb-2"
@@ -167,6 +184,7 @@ const ApplyToPosition = () => {
             />
           </div>
 
+          {/* Student response textarea */}
           <div className="mb-6">
             <label
               className="block text-gray-700 mb-2"
@@ -187,6 +205,7 @@ const ApplyToPosition = () => {
             />
           </div>
 
+          {/* Resume upload section */}
           <div className="mb-6">
             <label className="block text-gray-700 mb-2">Resume</label>
             <div className="flex items-center justify-between">
@@ -227,4 +246,5 @@ const ApplyToPosition = () => {
     </div>
   );
 };
+
 export default ApplyToPosition;
