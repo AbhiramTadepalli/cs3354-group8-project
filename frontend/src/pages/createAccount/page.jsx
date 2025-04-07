@@ -1,6 +1,8 @@
+//Nidhi Majoju
+//this is the use case to create an account
 import React from 'react';
 import { FiChevronDown } from 'react-icons/fi';
-// Then in your component:
+
 
 const CreateAccountPage = () => {
   return (
@@ -24,6 +26,7 @@ const CreateAccountPage = () => {
                 className="w-full h-12 p-4 border-none rounded-full bg-light_pink_clr text-sm appearance-none"
                 defaultValue=""
                 >
+                  {/* select user role*/}
                 <option value="" disabled>Role</option>
                 <option value="user">User</option>
                 <option value="admin">Professor</option>
@@ -33,7 +36,7 @@ const CreateAccountPage = () => {
                 <FiChevronDown className="w-5 h-5 text-black" />
                 </div>
             </div>
-
+           {/* fields to fill out for creating account*/}
           <div className="flex gap-4 mb-4">
             <input
               type="text"
