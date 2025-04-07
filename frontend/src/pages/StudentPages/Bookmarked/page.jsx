@@ -1,7 +1,10 @@
+/* Bookmarked page by Blend Ahmed*/
+
 import React from 'react';
 import NavBarStudent from "../../../Components/NavBarStudent";
 import { useNavigate } from 'react-router-dom';
 
+/* Mock Data to simulate bookmarked posts */
 const mockBookmarks = [
   {
     id: 1,
@@ -80,6 +83,7 @@ const Bookmarked = () => {
               <td className="p-2">{bookmark.role}</td>
               <td className="p-2">{bookmark.datePosted}</td>
               <td className="p-2 text-right pr-8">
+                {/* Button to go to the bookmarked post */}
                 <button onClick={() => navigate('../jobPostDetails')}
                   className="px-4 py-2 text-[#F14696] rounded"
                 >
