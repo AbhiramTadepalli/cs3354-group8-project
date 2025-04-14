@@ -1,3 +1,5 @@
+// Nidhi Majoju
+// this is the use case to login
 import React from 'react';
 
 const Login = () => {
@@ -13,7 +15,7 @@ const Login = () => {
         <h1 className="text-3xl text-center font-normal mb-10 mt-32">
           Login
         </h1>
-
+         {/* username and password fields*/}
         <form className="w-full">
           <input
             type="text"
