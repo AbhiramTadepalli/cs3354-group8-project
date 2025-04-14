@@ -1,10 +1,13 @@
+// Nidhi Majoju
+// this is for the use case where students can see the job posting for researwch opportunities
+
 import React from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import NavBar from '../../../Components/NavBarStudent';
 
 const JobPostingDetails = () => {
-  // Sample job data
+  // Sample job data that would be posted
   const job = {
     title: "Job Title",
     professor: "Professor Name",
