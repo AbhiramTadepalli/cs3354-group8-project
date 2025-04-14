@@ -26,7 +26,6 @@ import MyApplications from './pages/ProfessorPages/myApplications/page';
 import ViewPostedJobs from './pages/ProfessorPages/ViewPostedJobs/page';
 import ViewJob from './pages/ProfessorPages/ViewJob/page.jsx';
 import ViewStudentApplication from './pages/ProfessorPages/viewStudentApplication/page';
-import ViewStudentResponse from './pages/ProfessorPages/ViewStudentResponse/page';
 
 
 
