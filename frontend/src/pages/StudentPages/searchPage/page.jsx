@@ -1,3 +1,5 @@
+//Nidhi Majoju
+// this for the use case to search for students to see jobs
 import React from 'react'
 import {FiChevronDown } from 'react-icons/fi';
 import NavBar from '../../../Components/NavBarStudent';
