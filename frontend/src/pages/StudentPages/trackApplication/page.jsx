@@ -1,105 +1,169 @@
-// abhiram tadepalli
-import React from 'react'
-import NavBarStudent from "../../../Components/NavBarStudent";
+import React, { useState } from "react";
+import { FiSearch, FiChevronDown } from "react-icons/fi";
+import NavBar from "../../../Components/NavBarStudent";
 
 const TrackApplication = () => {
-
-  const dummyStudentApplications = [
+  //sample data for applications
+  const applicationData = [
     {
-      profilePicUrl: "",
-      jobTitle: 'Job #1',
-      lab: 'C.O.M.E.T. Lab',
-      professor: 'Dr. Jane Doe',
-      postID: '123456',
-      role: 'Research Assistant',
-      dateApplied: '04/05/2025',
-      status: 'Applied',
-      link: 'google.com'
+      id: "123456",
+      jobNumber: "Job #1",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Research Assistant",
+      dateApplied: "MM/DD/YYYY",
+      status: "Applied",
     },
     {
-      profilePicUrl: "",
-      jobTitle: 'Job #2',
-      lab: 'White\'s Lab',
-      professor: 'Dr. Walter White',
-      postID: '123457',
-      role: 'Undergraduate Research Assistant',
-      dateApplied: '04/03/2025',
-      status: 'Draft',
-      link: 'google.com'
+      id: "123456",
+      jobNumber: "Job #2",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Graduate Research Assistant",
+      dateApplied: "MM/DD/YYYY",
+      status: "Review",
     },
     {
-      profilePicUrl: "",
-      jobTitle: 'Job #3',
-      lab: 'OSCORP',
-      professor: 'Dr. Norman Osborne',
-      postID: '123457',
-      role: 'Something of a Scientist',
-      dateApplied: '04/07/2025',
-      status: 'Accepted',
-      link: 'google.com'
+      id: "123456",
+      jobNumber: "Job #3",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Research Intern",
+      dateApplied: "MM/DD/YYYY",
+      status: "Applied",
+    },
+    {
+      id: "123456",
+      jobNumber: "Job #4",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Lab Assistant",
+      dateApplied: "MM/DD/YYYY",
+      status: "Rejected",
+    },
+    {
+      id: "123456",
+      jobNumber: "Job #5",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Research Intern",
+      dateApplied: "MM/DD/YYYY",
+      status: "Accepted",
+    },
+    {
+      id: "123456",
+      jobNumber: "Job #6",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Graduate Research Assistant",
+      dateApplied: "MM/DD/YYYY",
+      status: "Review",
+    },
+    {
+      id: "123456",
+      jobNumber: "Job #7",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Research Assistant",
+      dateApplied: "MM/DD/YYYY",
+      status: "Accepted",
+    },
+    {
+      id: "123456",
+      jobNumber: "Job #8",
+      lab: "C.O.M.E.T Lab",
+      professor: "Dr. Jane Doe",
+      role: "Lab Assistant",
+      dateApplied: "MM/DD/YYYY",
+      status: "Applied",
     },
   ];
 
+  // Function to determine status color
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Applied":
+        return "bg-pink-500 text-white";
+      case "Review":
+        return "bg-purple-500 text-white";
+      case "Accepted":
+        return "bg-purple-700 text-white";
+      case "Rejected":
+        return "bg-red-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
+  };
 
   return (
-    <>
-      <NavBarStudent></NavBarStudent>
-      <div className="pb-8 pl-8 pr-8">
-        <h1 className="text-4xl font-bold mb-4">Track Applications</h1>
+    <div className="min-h-screen bg-background_clr p-6">
+      {/* Header with logo, search, and navigation */}
+      <NavBar />
 
-        <table className="w-full border-separate border-spacing-y-3 px-12">
-          <thead>
-            {/* Table header */}
-            <tr className="text-sm text-gray-600">
-              {/* Table header column names */}
-              <th className="pl-2 w-12"></th>
-              <th className="text-center w-32">Job Title</th>
-              <th className="text-center w-32">Lab</th>
-              <th className="text-center w-32">Professor</th>
-              <th className="text-center w-20">Job ID</th>
-              <th className="text-center w-32">Role</th>
-              <th className="text-center w-32">Date Applied</th>
-              <th className="text-center w-32">Status</th>
-              <th className="text-center w-32"></th> {/* Blank column header, but columns have a button/hyperlink */}
-            </tr>
-          </thead>
-          <tbody className="bg-orange_clr">
-            {/* Tracked Applications */}
-            {dummyStudentApplications.map((jobApplication) => (
-              /* Each row is an application of the student */
-              <tr key={jobApplication.postID} className="text-lg text-center border-b">
-                <td className="p-2 text-center">
-                  <img
-                    src={jobApplication.profilePicUrl}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                </td>
-                <td className="p-2">{jobApplication.jobTitle}</td>
-                <td className="p-2">{jobApplication.lab}</td>
-                <td className="p-2">{jobApplication.professor}</td>
-                <td className="p-2">{jobApplication.postID}</td>
-                <td className="p-2 text-sm">{jobApplication.role}</td>
-                <td className="p-2">{jobApplication.dateApplied}</td>
-                <td className="flex justify-center items-center p-2">
-                  <div className='rounded rounded-3xl w-fit p-2 px-4 bg-light_pink_clr'>
-                    {jobApplication.status}
+      {/* Applications Table Container */}
+      <div className="mt-16 px-6">
+        {/* Applications Table */}
+        <div className="bg-white rounded-lg overflow-hidden shadow">
+          {/* Table Header */}
+          <div className="grid grid-cols-7 bg-white p-4 border-b text-sm font-medium text-gray-600">
+            <div>Job Title</div>
+            <div>Lab</div>
+            <div>Professor</div>
+            <div>ID</div>
+            <div>Role</div>
+            <div>Date Applied</div>
+            <div>Status</div>
+          </div>
+
+          {/* Table Body */}
+          <div className="bg-orange-200">
+            {applicationData.map((app, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-8 p-3 border-b border-orange-300 items-center"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
                   </div>
-                </td>
-                <td className="p-2 text-right pr-8">
-                  <button onClick={() => console.log("navigate")} /* Need to implement navigation logic */
-                    className="px-4 py-2 text-dark_pink_clr rounded"
+                  <span>{app.jobNumber}</span>
+                </div>
+                <div>{app.lab}</div>
+                <div>{app.professor}</div>
+                <div>{app.id}</div>
+                <div>{app.role}</div>
+                <div>{app.dateApplied}</div>
+                <div>
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs ${getStatusColor(
+                      app.status
+                    )}`}
                   >
+                    {app.status}
+                  </span>
+                </div>
+                <div>
+                  <button className="px-3 py-1 bg-orange-300 text-pink-500 rounded-md text-xs font-medium">
                     View Application
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default TrackApplication
+export default TrackApplication;
