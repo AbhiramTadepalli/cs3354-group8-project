@@ -1,6 +1,7 @@
 // abhiram tadepalli
 import React, { useEffect, useState } from 'react'
 import NavBarStudent from "../../../Components/NavBarStudent";
+import { requestToUrl } from '../../../modules/requestHelpers';
 
 const ViewPostedJobs = () => {
 
@@ -32,13 +33,6 @@ const ViewPostedJobs = () => {
         console.error('Error:', error);
       });
   }, []);
-
-  function requestToUrl(request) {
-    // Convert request object to URL parameters
-    return '?' + Object.keys(request)
-      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(request[key]))
-      .join('&');
-  }
 
   
   useEffect(() => {
