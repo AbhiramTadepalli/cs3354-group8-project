@@ -41,7 +41,7 @@ root.render(
       
       {/* Student Pages */}
       <Route path = "/searchPage" element = {<SearchPage/>} />
-      <Route path = "/jobPostDetails" element = {<JobPostingDetails/>} />
+      <Route path="/jobDetails/:jobId" element={<JobPostingDetails />} />
       <Route path = "/trackApplication" element = {<TrackApplication/>} />
       <Route path = "/editStudentProfile" element = {<EditStudentProfile/>} />
       <Route path = "/viewStudentProfile" element = {<ViewStudentProfile/>} />
