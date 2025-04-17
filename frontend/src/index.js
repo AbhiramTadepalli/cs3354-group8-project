@@ -33,7 +33,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<Login />} />
 
       {/* User Pages */}
       <Route path= "/login" element={<Login />} />
