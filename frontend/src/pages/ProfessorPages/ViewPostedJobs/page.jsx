@@ -4,6 +4,7 @@ import NavBarStudent from "../../../Components/NavBarStudent";
 
 const ViewPostedJobs = () => {
 
+  const profID = 1;
   const [jobPostings, setJobPostings] = useState([]); // State to hold job postings
   const [jobApplications, setJobApplications] = useState({}); // State to hold job applications
 
@@ -23,7 +24,8 @@ const ViewPostedJobs = () => {
       })
       .then(data => {
         console.log('Success:', data);
-        setJobPostings(data); // Set the job postings state with the fetched data
+        data = data.filter(job => job.professor_id === profID); // Filter job postings for the logged-in professor
+          setJobPostings(data); // Set the job postings state with the fetched data
       }
       )
       .catch((error) => {
@@ -100,7 +102,7 @@ const ViewPostedJobs = () => {
               <th className="text-center w-32">Applied</th>
               <th className="text-center w-32">Accepted</th>
               <th className="text-center w-32">Rejected</th>
-              <th className="text-center w-32"></th> {/* Blank column header, but columns have a button/hyperlink */}
+              <th className="text-center w-32"></th>
             </tr>
           </thead>
           <tbody className="bg-orange_clr">
