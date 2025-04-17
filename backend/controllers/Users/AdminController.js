@@ -14,7 +14,7 @@ exports.getAllAdmins = async (req, res) => {
 
 // Controller function to get a Admin's data by admin_id
 exports.getAdmin = async (req, res) => {
-    const { admin_id } = req.body;
+    const { admin_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM
             Admins INNER JOIN Users ON Admins.user_id = Users.user_id 

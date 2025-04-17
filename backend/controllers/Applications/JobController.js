@@ -24,7 +24,7 @@ exports.getAllNonClosedJobs = async (req, res) => {
 
 // Controller function to get a Job by job_id
 exports.getJob = async (req, res) => {
-    const { job_id } = req.body;
+    const { job_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM Jobs WHERE job_id = ?`, [job_id]); // select all the rows (should only be 1) with the given job_id
         if (rows.length === 0)

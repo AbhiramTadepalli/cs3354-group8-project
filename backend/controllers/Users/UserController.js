@@ -13,7 +13,7 @@ exports.getAllUsers = async (req, res) => {
 
 // Controller function to get a User's data by user_id
 exports.getUser = async (req, res) => {
-    const { user_id } = req.body;
+    const { user_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM Users WHERE user_id = ?`, [user_id]); // select all the rows (should only be 1) with the given user_id
         if (rows.length === 0)

@@ -3,7 +3,7 @@ const { getJob } = require('./JobController.js')
 
 // Controller function to get ALL JobApplications for a job_id
 exports.getAllJobApplicationsForAJob = async (req, res) => {
-    const { job_id } = req.body;
+    const { job_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM JobApplications WHERE job_id = ? `, [job_id]); // fetch all JobApplications for a job_id from JobApplications tables
         
@@ -15,7 +15,7 @@ exports.getAllJobApplicationsForAJob = async (req, res) => {
 
 // Controller function to get ALL JobApplications for a student_id
 exports.getAllJobApplicationsForAStudent = async (req, res) => {
-    const { student_id } = req.body;
+    const { student_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM JobApplications WHERE student_id = ? `, [student_id]); // fetch all JobApplications for a student_id from JobApplications tables
         
@@ -27,7 +27,7 @@ exports.getAllJobApplicationsForAStudent = async (req, res) => {
 
 // Controller function to get a Job by job_id
 exports.getJobApplication = async (req, res) => {
-    const { application_id } = req.body;
+    const { application_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM JobApplications WHERE application_id = ?`, [application_id]); // select all the rows (should only be 1) with the given application_id
         if (rows.length === 0)

@@ -14,7 +14,7 @@ exports.getAllProfessors = async (req, res) => {
 
 // Controller function to get a Professor's data by professor_id
 exports.getProfessor = async (req, res) => {
-    const { professor_id } = req.body;
+    const { professor_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM
             Professors INNER JOIN Users ON Professors.user_id = Users.user_id 

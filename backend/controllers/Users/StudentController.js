@@ -14,7 +14,7 @@ exports.getAllStudents = async (req, res) => {
 
 // Controller function to get a Student's data by student_id
 exports.getStudent = async (req, res) => {
-    const { student_id } = req.body;
+    const { student_id } = req.query;
     try {
         const [rows] = await db.promise().query(`SELECT * FROM
             Students INNER JOIN Users ON Students.user_id = Users.user_id 
