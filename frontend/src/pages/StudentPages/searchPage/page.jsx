@@ -95,7 +95,25 @@ const SearchPage = () => {
     e.preventDefault();
     
     setListings(listings.map(listing => 
-      listing.job_id === id ? { ...listing, bookmarked: !listing.bookmarked } : listing
+      {
+        if (listing.job_id === id) {
+          if (!listing.bookmarked) {
+            // add bookmark to localstorage
+            let bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarked_jobs")) ?? []
+            console.log("bookmarked_jobs = ", bookmarkedJobs)
+            bookmarkedJobs.push(listing.job_id)
+            localStorage.setItem("bookmarked_jobs", JSON.stringify(bookmarkedJobs));
+          } else {
+            // remove bookmark from localstorage
+            let bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarked_jobs")) ?? []
+            console.log("bookmarked_jobs = ", bookmarkedJobs)
+            bookmarkedJobs = bookmarkedJobs.filter(jobId => jobId !== listing.job_id)
+            localStorage.setItem("bookmarked_jobs", JSON.stringify(bookmarkedJobs));
+          }
+          return { ...listing, bookmarked: !listing.bookmarked }
+        }
+        return listing
+      }
     ));
   };
 
