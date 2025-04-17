@@ -242,7 +242,7 @@ const JobPostingDetails = () => {
             </div>
             
             {/* Apply Button */}
-            <button className="w-full py-4 bg-orange_clr text-xl font-semibold rounded text-center mt-6 hover:bg-orange-400 transition-colors">
+            <button className="w-full py-4 bg-orange_clr text-xl  font-semibold rounded text-center mt-6 hover:bg-orange-400 transition-colors">
               Apply Now
             </button>
           </div>

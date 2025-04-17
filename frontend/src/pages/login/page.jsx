@@ -149,7 +149,7 @@ const Login = () => {
         <form className="w-full" onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Email"
             className="w-full p-4 mb-5 border-none rounded bg-orange_clr placeholder-white text-lg"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
