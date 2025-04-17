@@ -59,7 +59,7 @@ const SearchPage = () => {
         // Transform the data to include the bookmarked property
         const jobsWithBookmarkStatus = data.map(job => ({
           ...job,
-          bookmarked: false
+          bookmarked: JSON.parse(localStorage.getItem("bookmarked_jobs"))?.includes(job.job_id) || false
         }));
         
         setListings(jobsWithBookmarkStatus);
