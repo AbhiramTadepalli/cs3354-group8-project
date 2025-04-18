@@ -5,7 +5,7 @@ import { requestToUrl } from '../../../modules/requestHelpers';
 
 const ViewPostedJobs = () => {
 
-  const profID = 1;
+  const profID = localStorage.getItem('user')['professor_id']; // Get the logged-in professor's ID from local storage
   const [jobPostings, setJobPostings] = useState([]); // State to hold job postings
   const [jobApplications, setJobApplications] = useState({}); // State to hold job applications
 
