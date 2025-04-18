@@ -1,30 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import NavBar from "../../../Components/NavBarStudent";
 
-const ApplyToPosition = ({ jobDetails }) => {
-  // Extract job details with default values
-  const {
-    jobID = "1",
-    jobTitle = "Research Position",
-    professorName = "Professor Name",
-    labName = "Lab Name",
-    deadline = "Not specified",
-    description = "No description available",
-    hoursPerWeek = "Not specified",
-    term = "Not specified",
-    room = "Not specified",
-    compensation = "Not specified",
-    requirements = [],
-  } = jobDetails || {};
+const ApplyToPosition = () => {
+  // Get jobId from URL parameters
+  const { jobId } = useParams();
+  const navigate = useNavigate();
+
+  // State for job details and loading state
+  const [jobDetails, setJobDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // State to manage form data
   const [formData, setFormData] = useState({
     research_experience: "",
     hours_per_week: "",
     basic_student_response: "",
-    resume_link: "", // New field for resume link
+    resume_link: "",
   });
+
+  // Fetch job details when component mounts
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      if (!jobId) {
+        setError("No job ID provided");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `http://localhost:5002/GET/Job/one?jobID=${jobId}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jobData = await response.json();
+        console.log("Job details:", jobData);
+
+        // Transform job data to match expected format
+        setJobDetails({
+          jobID: jobData.jobID,
+          jobTitle: jobData.jobTitle || "Research Position",
+          professorName: jobData.professorName || "Professor Name",
+          labName: jobData.labName || "Lab Name",
+          deadline: jobData.applicationDeadline || "Not specified",
+          description: jobData.jobDescription || "No description available",
+          hoursPerWeek: jobData.hours || "Not specified",
+          term: jobData.term || "Not specified",
+          room: jobData.room || "Not specified",
+          compensation: jobData.compensation || "Not specified",
+          requirements: jobData.requirements
+            ? [
+                jobData.reqMajors,
+                jobData.reqGradeLevel,
+                jobData.reqSkills,
+              ].filter(Boolean)
+            : [],
+        });
+
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching job details:", error);
+        setError(`Failed to load job details: ${error.message}`);
+        setIsLoading(false);
+      }
+    };
+
+    fetchJobDetails();
+  }, [jobId]);
 
   // Handler for input field changes
   const handleChange = (e) => {
@@ -41,14 +90,14 @@ const ApplyToPosition = ({ jobDetails }) => {
 
     // Convert form data to JSON for submission
     const submitData = {
-      job_id: jobID,
-      student_id: "1",
+      job_id: jobDetails.jobID,
+      student_id: "1", // You might want to get this from authentication context
       research_experience: formData.research_experience,
       hours_per_week: formData.hours_per_week,
       basic_student_response: formData.basic_student_response,
       status: "Applied",
       documents_json: JSON.stringify({
-        resume: formData.resume_link, // Store the link in documents_json
+        resume: formData.resume_link,
       }),
     };
 
@@ -74,11 +123,40 @@ const ApplyToPosition = ({ jobDetails }) => {
       const result = await response.json();
       console.log("Application submitted successfully:", result);
       alert("Application submitted successfully!");
+
+      // Redirect to track applications page after submission
+      navigate("/student/track-applications");
     } catch (error) {
       console.error("Error submitting application:", error);
       alert("Failed to submit application. Please try again.");
     }
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background_clr p-6">
+        <NavBar />
+        <div className="flex justify-center items-center h-64">
+          <p className="text-lg">Loading job details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background_clr p-6">
+        <NavBar />
+        <div className="max-w-4xl mx-auto p-6">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background_clr p-6">
@@ -87,31 +165,34 @@ const ApplyToPosition = ({ jobDetails }) => {
 
       {/* Main content with job details */}
       <div className="max-w-4xl mx-auto p-6">
-        {/* Job details card - No changes */}
+        {/* Job details card */}
         <div className="bg-gray-200 rounded-md p-6 mb-6">
-          {/* Existing job details section */}
-          <h1 className="text-xl font-bold">{jobTitle}</h1>
+          <h1 className="text-xl font-bold">{jobDetails.jobTitle}</h1>
           <p className="mb-1">
-            Professor: {professorName} | Lab: {labName}
+            Professor: {jobDetails.professorName} | Lab: {jobDetails.labName}
           </p>
           <p className="mb-2">
-            <strong>Deadline: {deadline}</strong>
+            <strong>Deadline: {jobDetails.deadline}</strong>
           </p>
 
-          <p className="mb-4">{description}</p>
+          <p className="mb-4">{jobDetails.description}</p>
 
           <div className="mb-4">
-            <p className="font-bold mb-1">Hours: {hoursPerWeek}</p>
-            <p className="font-bold mb-1">Term: {term}</p>
-            <p className="font-bold mb-1">Room: {room}</p>
-            <p className="font-bold mb-1">Compensation: {compensation}</p>
+            <p className="font-bold mb-1">Hours: {jobDetails.hoursPerWeek}</p>
+            <p className="font-bold mb-1">Term: {jobDetails.term}</p>
+            <p className="font-bold mb-1">Room: {jobDetails.room}</p>
+            <p className="font-bold mb-1">
+              Compensation: {jobDetails.compensation}
+            </p>
           </div>
 
           <div>
             <h2 className="font-bold mb-1">Requirements</h2>
             <ul className="list-disc ml-6">
-              {requirements.length > 0 ? (
-                requirements.map((req, index) => <li key={index}>{req}</li>)
+              {jobDetails.requirements && jobDetails.requirements.length > 0 ? (
+                jobDetails.requirements.map((req, index) => (
+                  <li key={index}>{req}</li>
+                ))
               ) : (
                 <li>No specific requirements listed</li>
               )}
@@ -119,13 +200,14 @@ const ApplyToPosition = ({ jobDetails }) => {
           </div>
         </div>
 
-        {/* Application form */}
+        {/* Application form - No changes needed here */}
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-md shadow-md"
         >
           <h2 className="text-xl font-bold mb-4">Application Form</h2>
 
+          {/* Form fields remain the same */}
           {/* Research experience input */}
           <div className="mb-4">
             <label
