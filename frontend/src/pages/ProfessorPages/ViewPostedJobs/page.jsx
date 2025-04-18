@@ -1,45 +1,81 @@
 // abhiram tadepalli
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBarProfessor from "../../../Components/NavBarProfessor";
+import { requestToUrl } from '../../../modules/requestHelpers';
 
 const ViewPostedJobs = () => {
 
-  const dummyJobPostings = [
-    {
-      profilePicUrl: "",
-      datePosted: "04/02/2025",
-      jobTitle: 'Job #1',
-      postID: '123456',
-      role: 'Research Assistant',
-      numApplied: '22',
-      numAccepted: '2',
-      numRejected: '2',
-      link: 'google.com'
-    },
-    {
-      profilePicUrl: "",
-      datePosted: "03/22/2025",
-      jobTitle: 'Job #2',
-      postID: '123457',
-      role: 'Teaching Assistant',
-      numApplied: '52',
-      numAccepted: '22',
-      numRejected: '6',
-      link: 'google.com'
-    },
-    {
-      profilePicUrl: "",
-      datePosted: "04/05/2025",
-      jobTitle: 'Job #3',
-      postID: '123456',
-      role: 'Undergraduate Assistant',
-      numApplied: '1',
-      numAccepted: '0',
-      numRejected: '1',
-      link: 'google.com'
-    },
-  ];
+  const profID = 1;
+  const [jobPostings, setJobPostings] = useState([]); // State to hold job postings
+  const [jobApplications, setJobApplications] = useState({}); // State to hold job applications
 
+  useEffect(() => {
+    // Fetch job postings from the server when the component mounts 
+    fetch('http://localhost:5002/GET/Job/all', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+        data = data.filter(job => job.professor_id === profID); // Filter job postings for the logged-in professor
+          setJobPostings(data); // Set the job postings state with the fetched data
+      }
+      )
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  
+  useEffect(() => {
+    const newApplicationsMap = {} // temporary map to hold new applications for each job posting
+
+    
+    const jobApplicationResponses = jobPostings.map((job) => {
+
+      const request = {
+        "job_id": job.job_id
+      }
+
+      // link jobApplications to jobPostings
+      return fetch('http://localhost:5002/GET/JobApplication/job' + requestToUrl(request), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          newApplicationsMap[job.job_id] = data; // Map job ID to its applications
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          newApplicationsMap[job.job_id] = []; // If error, set applications to empty array
+        });
+    });
+
+    Promise.all(jobApplicationResponses).then(() => {
+      setJobApplications(newApplicationsMap); // Update state with the map
+      console.log('Job Applications:', jobApplications); // Log the job applications
+    });
+
+    
+    
+  }, [jobPostings]);
+  
 
   return (
     <>
@@ -60,14 +96,14 @@ const ViewPostedJobs = () => {
               <th className="text-center w-32">Applied</th>
               <th className="text-center w-32">Accepted</th>
               <th className="text-center w-32">Rejected</th>
-              <th className="text-center w-32"></th> {/* Blank column header, but columns have a button/hyperlink */}
+              <th className="text-center w-32"></th>
             </tr>
           </thead>
           <tbody className="bg-orange_clr">
             {/* Posted Jobs */}
-            {dummyJobPostings.map((job) => (
+            {jobPostings.map((job) => (
               /* Each row is a Job the professor has posted */
-              <tr key={job.postID} className="text-lg text-center border-b">
+              <tr key={job.job_id} className="text-lg text-center border-b">
                 <td className="p-2 text-center">
                   <img
                     src={job.profilePicUrl}
@@ -75,11 +111,11 @@ const ViewPostedJobs = () => {
                     className="w-10 h-10 rounded-full"
                   />
                 </td>
-                <td className="p-2">{job.jobTitle}</td>
-                <td className="p-2">{job.datePosted}</td>
-                <td className="p-2">{job.postID}</td>
-                <td className="p-2 text-sm">{job.role}</td>
-                <td className="p-2">{job.numApplied}</td>
+                <td className="p-2">{job.job_title}</td>
+                <td className="p-2">{job.created_at}</td>
+                <td className="p-2">{job.job_id}</td>
+                <td className="p-2 text-sm">{job.job_title}</td>
+                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].length : 0}</td>
                 <td className="p-2">{job.numAccepted}</td>
                 <td className="p-2">{job.numRejected}</td>
                 <td className="p-2 text-right pr-8">
