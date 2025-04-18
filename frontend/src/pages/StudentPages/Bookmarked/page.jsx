@@ -12,8 +12,8 @@ const mockBookmarks = [
   {
     id: 1,
     profilePicUrl: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
-    jobTitle: 'Looking for Research Assistant',
-    lab: 'Biology Lab',
+    job_title: 'Looking for Research Assistant',
+    lab_name: 'Biology Lab',
     professor: 'Dr. Smith',
     postID: 'RA-101',
     role: 'Research Assistant',
@@ -22,8 +22,8 @@ const mockBookmarks = [
   {
     id: 2,
     profilePicUrl: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
-    jobTitle: 'Data Analyst',
-    lab: 'Computer Science Lab',
+    job_title: 'Data Analyst',
+    lab_name: 'Computer Science Lab',
     professor: 'Dr. Johnson',
     postID: 'DA-202',
     role: 'Analyst',
@@ -32,8 +32,8 @@ const mockBookmarks = [
   {
     id: 3,
     profilePicUrl: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
-    jobTitle: 'Lab Assisant Required',
-    lab: 'Physics Lab',
+    job_title: 'Lab Assisant Required',
+    lab_name: 'Physics Lab',
     professor: 'Dr. Jones',
     postID: 'RA-303',
     role: 'Lab Assistant',
