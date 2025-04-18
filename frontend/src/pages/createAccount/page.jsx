@@ -100,9 +100,9 @@ const CreateAccountPage = () => {
         payload = {
           ...userData, // Common user data
           // Professor-specific fields
-          Net_id: formData.netId,
+          net_id: formData.netId,
           department: formData.department,
-          Phone_no: formData.phoneNo
+          phone_no: formData.phoneNo
         };
       } else if (selectedRole === 'admin') {
         endpoint = 'http://localhost:5002/POST/Admin/add';
