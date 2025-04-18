@@ -34,7 +34,7 @@ const NavBarProfessor = () => {
       {/* Logo and search section */}
       <div className="flex justify-between items-center mb-8 pl-6 pr-6">
         <div className="flex items-center">
-          <a href="/myApplications">
+          <a href="/viewPostedJobs">
             <img
               src="/NavBarLogo.png"
               alt="Comet Logo"

@@ -143,7 +143,7 @@ const CreateAccountPage = () => {
       if (selectedRole === 'student') {
         navigate('/searchPage'); // Redirect students to searchPage
       } else if (selectedRole === 'professor') {
-        navigate('/myApplications'); // Redirect professors to myApplications
+        navigate('/viewPostedJobs'); // Redirect professors to ViewPostedJobs
       } else {
         // Default fallback for admin or other roles
         navigate('/');

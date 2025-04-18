@@ -109,7 +109,7 @@ const Login = () => {
       if (userType === 'student') {
         navigate('/searchPage'); // Redirect to searchPage
       } else if (userType === 'professor') {
-        navigate('/myApplications'); // Redirect to myApplicationsPage
+        navigate('/viewPostedJobs'); // Redirect to ViewPostedJobs
       } else if (userType === 'admin') {
         navigate('/admin-dashboard'); // Optional: redirect to admin page
       } else {
