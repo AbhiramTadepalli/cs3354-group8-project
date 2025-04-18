@@ -1,8 +1,11 @@
 /* Bookmarked page by Blend Ahmed*/
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBarStudent from "../../../Components/NavBarStudent";
 import { useNavigate } from 'react-router-dom';
+import { requestToUrl } from '../../../modules/requestHelpers';
+import { FaBookmark } from 'react-icons/fa';
+import { FiBookmark } from 'react-icons/fi';
 
 /* Mock Data to simulate bookmarked posts */
 const mockBookmarks = [
@@ -41,6 +44,78 @@ const mockBookmarks = [
 
 const Bookmarked = () => {
   const navigate = useNavigate();
+
+  const [bookmarkedJobs, setBookmarkedJobs] = useState([]); // State to hold bookmarked jobs
+  console.log("bookmarkedJobs", bookmarkedJobs);
+  bookmarkedJobs.map((job) => {console.log("b", job)});
+
+  useEffect(() => {
+    const bookmarkedJobIds = JSON.parse(localStorage.getItem("bookmarked_jobs")) ?? []
+
+    const bookmarkedJobResponses = bookmarkedJobIds.map((jobId) => {
+      const request = {
+        job_id: jobId
+      }
+      // Fetch job postings from the server when the component mounts 
+      return fetch('http://localhost:5002/GET/Job/one' + requestToUrl(request), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Success:', data);
+          return {...data[0], bookmarked: true}; // Want only element in array
+        }
+        )
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    });
+  
+    Promise.all(bookmarkedJobResponses).then((data) => {
+      setBookmarkedJobs(data); // Update state with the map
+      console.log("bookmarkedJobs", bookmarkedJobs);
+    });
+
+    
+    
+  }, [localStorage.getItem("bookmarked_jobs")]);
+
+  const toggleBookmark = (e, id) => {
+    // Stop the click event from bubbling up to the parent Link
+    e.stopPropagation();
+    e.preventDefault();
+    
+    setBookmarkedJobs(bookmarkedJobs.map(job => 
+      {
+        if (job.job_id === id) {
+          if (!job.bookmarked) {
+            // add bookmark to localstorage
+            let bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarked_jobs")) ?? []
+            console.log("bookmarked_jobs = ", bookmarkedJobs)
+            bookmarkedJobs.push(job.job_id)
+            localStorage.setItem("bookmarked_jobs", JSON.stringify(bookmarkedJobs));
+          } else {
+            // remove bookmark from localstorage
+            let bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarked_jobs")) ?? []
+            console.log("bookmarked_jobs = ", bookmarkedJobs)
+            bookmarkedJobs = bookmarkedJobs.filter(jobId => jobId !== job.job_id)
+            localStorage.setItem("bookmarked_jobs", JSON.stringify(bookmarkedJobs));
+          }
+          return { ...job, bookmarked: !job.bookmarked }
+        }
+        return job
+      }
+    ));
+  };
+
   return (
     <div className="w-screen h-screen bg-red-50 p-8">
       {/* Top Navigation */}
@@ -63,21 +138,23 @@ const Bookmarked = () => {
             <th className="pl-2 text-center w-32">Role</th>
             <th className="pl-2 text-center w-32">Date Posted</th>
             <th className="pl-2 w-20"></th>
+            <th className="pl-2 w-20"></th>
           </tr>
         </thead>
         <tbody className="bg-[#F6B586]">
           {/* Bookmarked Posts Information */}
           {mockBookmarks.map((bookmark) => (
-            <tr key={bookmark.id} className="text-lg text-center border-b">
+            
+            <tr key={bookmark.postID} className="text-lg text-center border-b">
               <td className="p-2 text-center">
                 <img
-                  src={bookmark.profilePicUrl}
+                  src={'https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg'}
                   alt="Profile"
                   className="w-10 h-10 rounded-full"
                 />
               </td>
-              <td className="p-2">{bookmark.jobTitle}</td>
-              <td className="p-2">{bookmark.lab}</td>
+              <td className="p-2">{bookmark.job_title}</td>
+              <td className="p-2">{bookmark.lab_name}</td>
               <td className="p-2">{bookmark.professor}</td>
               <td className="p-2">{bookmark.postID}</td>
               <td className="p-2">{bookmark.role}</td>
@@ -90,6 +167,15 @@ const Bookmarked = () => {
                   View Post
                 </button>
               </td>
+              <div 
+                onClick={(e) => toggleBookmark(e, bookmark.job_id)} 
+                className="cursor-pointer"
+              >
+                {bookmark.bookmarked ?
+                  <FaBookmark className="text-xl text-dark_pink_clr" /> :
+                  <FiBookmark className="text-xl" />
+                }
+              </div>
             </tr>
           ))}
         </tbody>
