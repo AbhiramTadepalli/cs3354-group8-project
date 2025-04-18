@@ -33,7 +33,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={localStorage.getItem('user') ? (localStorage.getItem('userType') == 'professor' ? <ViewPostedJobs/> : <SearchPage/>) : <Login />} />
 
       {/* User Pages */}
       <Route path= "/login" element={<Login />} />
