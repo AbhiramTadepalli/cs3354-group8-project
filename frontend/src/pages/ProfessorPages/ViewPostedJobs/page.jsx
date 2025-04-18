@@ -1,6 +1,6 @@
 // abhiram tadepalli
 import React from 'react'
-import NavBarStudent from "../../../Components/NavBarStudent";
+import NavBarProfessor from "../../../Components/NavBarProfessor";
 
 const ViewPostedJobs = () => {
 
@@ -43,7 +43,7 @@ const ViewPostedJobs = () => {
 
   return (
     <>
-      <NavBarStudent></NavBarStudent>
+      <NavBarProfessor></NavBarProfessor>
       <div className="pb-8 pl-8 pr-8">
         <h1 className="text-4xl font-bold mb-4">View Posted Jobs</h1>
 

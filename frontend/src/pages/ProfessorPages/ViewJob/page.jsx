@@ -1,6 +1,6 @@
 // abhiram tadepalli
 import React from 'react'
-import NavBarStudent from "../../../Components/NavBarStudent";
+import NavBarProfessor from "../../../Components/NavBarProfessor";
 
 const ViewPostedJobs = () => {
 
@@ -46,7 +46,7 @@ const ViewPostedJobs = () => {
 
   return (
     <>
-      <NavBarStudent></NavBarStudent>
+      <NavBarProfessor></NavBarProfessor>
       <div className="pb-8 pl-8 pr-8">
         <h1 className="text-4xl font-bold mb-4">Job #1 Name - Research Assistant Applications</h1>
         <h3 className="text-xl font-semibold text-gray-500 mb-4">#123456 — Posted on: MM/DD/YYYY — 8 Applications </h3>
