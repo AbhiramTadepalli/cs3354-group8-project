@@ -5,7 +5,7 @@ import { requestToUrl } from '../../../modules/requestHelpers';
 
 const ViewPostedJobs = () => {
 
-  const profID = localStorage.getItem('user')['professor_id']; // Get the logged-in professor's ID from local storage
+  const profID = JSON.parse(localStorage.getItem('user'))['professor_id']; // Get the logged-in professor's ID from local storage
   const [jobPostings, setJobPostings] = useState([]); // State to hold job postings
   const [jobApplications, setJobApplications] = useState({}); // State to hold job applications
 
@@ -19,12 +19,12 @@ const ViewPostedJobs = () => {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Networke response was not ok');
         }
         return response.json();
       })
       .then(data => {
-        console.log('Success:', data);
+        console.log('Success:', data, profID);
         data = data.filter(job => job.professor_id === profID); // Filter job postings for the logged-in professor
           setJobPostings(data); // Set the job postings state with the fetched data
       }
