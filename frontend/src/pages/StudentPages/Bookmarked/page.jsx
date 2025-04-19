@@ -74,21 +74,21 @@ const toggleBookmark = (e, id) => {
   e.preventDefault();
 
 
-  // grab current array of bookmarked IDs
+  // Grab current array of bookmarked IDs
   let bookmarkedIds = JSON.parse(localStorage.getItem("bookmarked_jobs")) ?? [];
 
 
   if (bookmarkedIds.includes(id)) {
-    // if already bookmarked, remove it
+    // If already bookmarked, remove it
     bookmarkedIds = bookmarkedIds.filter(jobId => jobId !== id);
     localStorage.setItem("bookmarked_jobs", JSON.stringify(bookmarkedIds));
-    // 2update state by filtering out this job so the row disappears
+    // Update state by filtering out this job so the row disappears
     setBookmarkedJobs(prev => prev.filter(job => job.job_id !== id));
   } else {
-    // if not bookmarked (unlikely on this page), you could add it back
+    // If not bookmarked (unlikely on this page), you could add it back
     bookmarkedIds.push(id);
     localStorage.setItem("bookmarked_jobs", JSON.stringify(bookmarkedIds));
-    // optionally re‑fetch or re‑insert the job into state
+    // Optionally re‑fetch or re‑insert the job into state
   }
 };
 
@@ -133,7 +133,6 @@ const toggleBookmark = (e, id) => {
                 </td>
                 <td className="p-2">{bookmark.job_title}</td>
                 <td className="p-2">{bookmark.lab_name}</td>
-                {/* Now use the merged professorName property */}
                 <td className="p-2">{bookmark.professorName}</td>
                 <td className="p-2">{bookmark.job_id}</td>
                 <td className="p-2">{bookmark.job_title}</td>
