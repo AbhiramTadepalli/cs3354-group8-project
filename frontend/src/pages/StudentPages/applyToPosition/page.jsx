@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
 import NavBar from "../../../Components/NavBarStudent";
 
 const ApplyToPosition = () => {
@@ -32,41 +31,46 @@ const ApplyToPosition = () => {
 
       try {
         setIsLoading(true);
-        const response = await fetch(
-          `http://localhost:5002/GET/Job/one?jobID=${jobId}`
-        );
+
+        // Get all jobs from the valid endpoint
+        const response = await fetch("http://localhost:5002/GET/Job/valid");
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const jobData = await response.json();
-        console.log("Job details:", jobData);
+        const allJobs = await response.json();
+
+        // Find the job with matching ID
+        const foundJob = allJobs.find((job) => job.job_id.toString() === jobId);
+
+        if (!foundJob) {
+          throw new Error(`Job with ID ${jobId} not found`);
+        }
 
         // Transform job data to match expected format
         setJobDetails({
-          jobID: jobData.jobID,
-          jobTitle: jobData.jobTitle || "Research Position",
-          professorName: jobData.professorName || "Professor Name",
-          labName: jobData.labName || "Lab Name",
-          deadline: jobData.applicationDeadline || "Not specified",
-          description: jobData.jobDescription || "No description available",
-          hoursPerWeek: jobData.hours || "Not specified",
-          term: jobData.term || "Not specified",
-          room: jobData.room || "Not specified",
-          compensation: jobData.compensation || "Not specified",
-          requirements: jobData.requirements
-            ? [
-                jobData.reqMajors,
-                jobData.reqGradeLevel,
-                jobData.reqSkills,
-              ].filter(Boolean)
-            : [],
+          jobID: foundJob.job_id,
+          jobTitle: foundJob.job_title || "Research Position",
+          professorName:
+            `Professor ID: ${foundJob.professor_id}` || "Professor Name",
+          labName: foundJob.lab_name || "Lab Name",
+          deadline: foundJob.application_deadline || "Not specified",
+          description: foundJob.job_description || "No description available",
+          hoursPerWeek: foundJob.hours || "Not specified",
+          term: foundJob.term || "Not specified",
+          room: foundJob.location || "Not specified",
+          compensation: foundJob.compensation || "Not specified",
+          requirements:
+            [
+              foundJob.req_majors,
+              foundJob.req_grade_level,
+              foundJob.req_skills,
+            ].filter(Boolean) || [],
         });
 
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching job details:", error);
         setError(`Failed to load job details: ${error.message}`);
         setIsLoading(false);
       }
@@ -90,44 +94,41 @@ const ApplyToPosition = () => {
 
     // Convert form data to JSON for submission
     const submitData = {
-      job_id: jobDetails.jobID,
-      student_id: "1", // You might want to get this from authentication context
-      research_experience: formData.research_experience,
-      hours_per_week: formData.hours_per_week,
-      basic_student_response: formData.basic_student_response,
+      job_id: parseInt(jobDetails.jobID) || 1,
+      student_id: 1,
+      research_experience: parseInt(formData.research_experience) || 0,
+      hours_per_week: parseInt(formData.hours_per_week) || 0,
+      basic_student_response: formData.basic_student_response || "",
       status: "Applied",
-      documents_json: JSON.stringify({
-        resume: formData.resume_link,
-      }),
+      documents_json: JSON.stringify({ resume: formData.resume_link || "" }),
     };
 
-    console.log("Form submitted:", formData);
-    console.log("Submit data:", submitData);
-
     try {
-      const response = await fetch(
-        "http://localhost:5002/POST/JobApplication/add",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify(submitData),
-        }
-      );
+      const url = `http://localhost:5002/POST/JobApplication/add`;
+
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(submitData),
+      });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
-      console.log("Application submitted successfully:", result);
-      alert("Application submitted successfully!");
+      alert(
+        `Application submitted successfully! Application ID: ${
+          result.message.split(" ")[2]
+        }`
+      );
 
       // Redirect to track applications page after submission
-      navigate("/student/track-applications");
+      navigate("/trackApplication");
     } catch (error) {
-      console.error("Error submitting application:", error);
       alert("Failed to submit application. Please try again.");
     }
   };
@@ -200,14 +201,13 @@ const ApplyToPosition = () => {
           </div>
         </div>
 
-        {/* Application form - No changes needed here */}
+        {/* Application form */}
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-md shadow-md"
         >
           <h2 className="text-xl font-bold mb-4">Application Form</h2>
 
-          {/* Form fields remain the same */}
           {/* Research experience input */}
           <div className="mb-4">
             <label
@@ -287,7 +287,7 @@ const ApplyToPosition = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4">
             <button
               type="submit"
               className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"

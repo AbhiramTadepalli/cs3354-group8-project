@@ -13,7 +13,8 @@ const JobPostingDetails = () => {
 
   // Function to handle Apply Now button click
   const handleApply = () => {
-    navigate(`/student/applyToPosition/${jobId}`);
+    navigate(`/applyToPosition/${jobId}`);
+    console.log(`Navigating to /applyToPosition/${jobId}`);
   };
 
   // Function to fetch professor details by ID

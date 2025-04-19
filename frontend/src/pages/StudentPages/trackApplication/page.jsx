@@ -6,90 +6,53 @@ const TrackApplication = () => {
   // State to store actual application data from API
   const [applications, setApplications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentStudentId, setCurrentStudentId] = useState(null);
 
-  // Original sample data as fallback
-  const sampleData = [
-    {
-      id: "123456",
-      jobNumber: "Job #1",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Research Assistant",
-      dateApplied: "MM/DD/YYYY",
-      status: "Applied",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #2",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Graduate Research Assistant",
-      dateApplied: "MM/DD/YYYY",
-      status: "Review",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #3",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Research Intern",
-      dateApplied: "MM/DD/YYYY",
-      status: "Applied",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #4",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Lab Assistant",
-      dateApplied: "MM/DD/YYYY",
-      status: "Rejected",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #5",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Research Intern",
-      dateApplied: "MM/DD/YYYY",
-      status: "Accepted",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #6",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Graduate Research Assistant",
-      dateApplied: "MM/DD/YYYY",
-      status: "Review",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #7",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Research Assistant",
-      dateApplied: "MM/DD/YYYY",
-      status: "Accepted",
-    },
-    {
-      id: "123456",
-      jobNumber: "Job #8",
-      lab: "C.O.M.E.T Lab",
-      professor: "Dr. Jane Doe",
-      role: "Lab Assistant",
-      dateApplied: "MM/DD/YYYY",
-      status: "Applied",
-    },
-  ];
-
+  // Get current student ID from localStorage when component mounts
   useEffect(() => {
+    try {
+      // Get user object from localStorage
+      const userJSON = localStorage.getItem("user");
+
+      if (!userJSON) {
+        console.log("No user found in localStorage");
+        setIsLoading(false);
+        return;
+      }
+
+      const user = JSON.parse(userJSON);
+      console.log("User from localStorage:", user);
+
+      // For students, we need the student_id field (not user_id)
+      // student_id is stored in the merged userDetails object during login
+      const studentId = user.student_id;
+      console.log("Found student ID:", studentId);
+
+      if (!studentId) {
+        console.warn("No student ID found in user data");
+        // Use fallback for testing if needed
+        setCurrentStudentId(1);
+      } else {
+        setCurrentStudentId(studentId);
+      }
+    } catch (error) {
+      console.error("Error retrieving student ID:", error);
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Fetch applications when student ID is available
+  useEffect(() => {
+    if (!currentStudentId) return; // Don't fetch if no student ID
+
     const fetchStudentApplications = async () => {
       try {
-        console.log("Fetching student applications...");
+        console.log(
+          `Fetching applications for student ID: ${currentStudentId}`
+        );
 
         const applicationsResponse = await fetch(
-          "http://localhost:5002/GET/JobApplication/student?studentID=1"
+          `http://localhost:5002/GET/JobApplication/student?student_id=${currentStudentId}`
         );
 
         if (!applicationsResponse.ok) {
@@ -106,7 +69,7 @@ const TrackApplication = () => {
         for (const application of applicationList) {
           try {
             const jobResponse = await fetch(
-              `http://localhost:5002/GET/Job/one?jobID=${application.jobID}`
+              `http://localhost:5002/GET/Job/one?job_id=${application.job_id}`
             );
 
             if (!jobResponse.ok) {
@@ -114,41 +77,41 @@ const TrackApplication = () => {
             }
 
             const jobData = await jobResponse.json();
-            console.log(`Job details for job ${application.jobID}:`, jobData);
+            console.log(`Job details for job ${application.job_id}:`, jobData);
 
             // Combine job and application data
             enhancedApplications.push({
-              id: application.applicationID,
-              jobNumber: `Job #${application.jobID}`,
-              lab: jobData.labName || "Unknown",
-              professor: jobData.professorName || "Unknown",
-              role: jobData.jobTitle || "Unknown",
-              dateApplied: new Date(
-                application.applicationDate
-              ).toLocaleDateString(),
-              status: application.applicationStatus || "Applied",
+              id: application.application_id,
+              jobNumber: `Job #${application.job_id}`,
+              lab: jobData.lab_name || "Unknown",
+              professor: `Professor ID: ${jobData.professor_id}` || "Unknown",
+              role: jobData.job_title || "Unknown",
+              dateApplied: application.application_date
+                ? new Date(application.application_date).toLocaleDateString()
+                : "Not recorded",
+              status: application.status || "Applied",
             });
           } catch (error) {
             console.error(
-              `Error fetching job details for job ${application.jobID}:`,
+              `Error fetching job details for job ${application.job_id}:`,
               error
             );
           }
         }
 
         setApplications(
-          enhancedApplications.length > 0 ? enhancedApplications : sampleData
+          enhancedApplications.length > 0 ? enhancedApplications : []
         );
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching student applications:", error);
-        setApplications(sampleData);
+        setApplications([]);
         setIsLoading(false);
       }
     };
 
     fetchStudentApplications();
-  }, []);
+  }, [currentStudentId]);
 
   // Function to determine status color
   const getStatusColor = (status) => {
@@ -177,7 +140,7 @@ const TrackApplication = () => {
           <div className="flex justify-center items-center h-40">
             <p className="text-lg">Loading applications...</p>
           </div>
-        ) : (
+        ) : applications.length > 0 ? (
           /* Applications Table */
           <div className="bg-white rounded-lg overflow-hidden shadow">
             {/* Table Header */}
@@ -236,6 +199,20 @@ const TrackApplication = () => {
                 </div>
               ))}
             </div>
+          </div>
+        ) : (
+          /* No applications message */
+          <div className="bg-white p-8 rounded-lg shadow text-center">
+            <h2 className="text-xl font-bold mb-2">No Applications Found</h2>
+            <p className="text-gray-600 mb-4">
+              You haven't applied to any positions yet.
+            </p>
+            <a
+              href="/searchPage"
+              className="inline-block px-4 py-2 bg-orange-300 text-black rounded-md hover:bg-orange-400"
+            >
+              Browse Positions
+            </a>
           </div>
         )}
       </div>
