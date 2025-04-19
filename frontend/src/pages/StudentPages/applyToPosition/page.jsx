@@ -1,137 +1,202 @@
-import React, { useState, useRef } from "react";
-import { FiSearch, FiPaperclip } from "react-icons/fi"; // Importing icons for UI
-import NavBar from "../../../Components/NavBarStudent"; // Importing the navigation bar component for students
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import NavBar from "../../../Components/NavBarStudent";
 
 const ApplyToPosition = () => {
-  // Reference for the file input element
-  const fileInputRef = useRef(null);
+  // Get jobId from URL parameters
+  const { jobId } = useParams();
+  const navigate = useNavigate();
+
+  // State for job details and loading state
+  const [jobDetails, setJobDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // State to manage form data
   const [formData, setFormData] = useState({
-    research_experience: "", // Number of semesters of research experience
-    hours_per_week: "", // Available hours per week
-    basic_student_response: "", // Student's response describing their skills and interest
+    research_experience: "",
+    hours_per_week: "",
+    basic_student_response: "",
+    resume_link: "",
   });
 
-  // State to manage the uploaded resume file
-  const [resumeFile, setResumeFile] = useState(null);
+  // Fetch job details when component mounts
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      if (!jobId) {
+        setError("No job ID provided");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+
+        // Get all jobs from the valid endpoint
+        const response = await fetch("http://localhost:5002/GET/Job/valid");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const allJobs = await response.json();
+
+        // Find the job with matching ID
+        const foundJob = allJobs.find((job) => job.job_id.toString() === jobId);
+
+        if (!foundJob) {
+          throw new Error(`Job with ID ${jobId} not found`);
+        }
+
+        // Transform job data to match expected format
+        setJobDetails({
+          jobID: foundJob.job_id,
+          jobTitle: foundJob.job_title || "Research Position",
+          professorName:
+            `Professor ID: ${foundJob.professor_id}` || "Professor Name",
+          labName: foundJob.lab_name || "Lab Name",
+          deadline: foundJob.application_deadline || "Not specified",
+          description: foundJob.job_description || "No description available",
+          hoursPerWeek: foundJob.hours || "Not specified",
+          term: foundJob.term || "Not specified",
+          room: foundJob.location || "Not specified",
+          compensation: foundJob.compensation || "Not specified",
+          requirements:
+            [
+              foundJob.req_majors,
+              foundJob.req_grade_level,
+              foundJob.req_skills,
+            ].filter(Boolean) || [],
+        });
+
+        setIsLoading(false);
+      } catch (error) {
+        setError(`Failed to load job details: ${error.message}`);
+        setIsLoading(false);
+      }
+    };
+
+    fetchJobDetails();
+  }, [jobId]);
 
   // Handler for input field changes
   const handleChange = (e) => {
-    const { name, value } = e.target; // Extracting name and value from the input
+    const { name, value } = e.target;
     setFormData({
-      ...formData, // Spread existing form data
-      [name]: value, // Update the specific field
+      ...formData,
+      [name]: value,
     });
   };
 
-  // Handler for file input changes
-  const handleFileChange = (e) => {
-    if (e.target.files[0]) {
-      setResumeFile(e.target.files[0]); // Set the selected file in state
-    }
-  };
-
-  // Handler to trigger the hidden file input when "Attach Resume" is clicked
-  const handleAttachClick = () => {
-    fileInputRef.current.click(); // Programmatically click the file input
-  };
-
   // Handler for form submission
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Create FormData object to handle file uploads
-    const submitData = new FormData();
-    submitData.append("research_experience", formData.research_experience);
-    submitData.append("hours_per_week", formData.hours_per_week);
-    submitData.append(
-      "basic_student_response",
-      formData.basic_student_response
-    );
+    // Convert form data to JSON for submission
+    const submitData = {
+      job_id: parseInt(jobDetails.jobID) || 1,
+      student_id: 1,
+      research_experience: parseInt(formData.research_experience) || 0,
+      hours_per_week: parseInt(formData.hours_per_week) || 0,
+      basic_student_response: formData.basic_student_response || "",
+      status: "Applied",
+      documents_json: JSON.stringify({ resume: formData.resume_link || "" }),
+    };
 
-    if (resumeFile) {
-      submitData.append("resume", resumeFile); // Append the resume file if it exists
+    try {
+      const url = `http://localhost:5002/POST/JobApplication/add`;
+
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(submitData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      alert(
+        `Application submitted successfully! Application ID: ${
+          result.message.split(" ")[2]
+        }`
+      );
+
+      // Redirect to track applications page after submission
+      navigate("/trackApplication");
+    } catch (error) {
+      alert("Failed to submit application. Please try again.");
     }
-
-    // Log the form data and resume file (placeholder for API call)
-    console.log("Form submitted:", formData);
-    console.log("Resume file:", resumeFile);
-
-    // TODO: Add API call to submit the form data
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background_clr p-6">
+        <NavBar />
+        <div className="flex justify-center items-center h-64">
+          <p className="text-lg">Loading job details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background_clr p-6">
+        <NavBar />
+        <div className="max-w-4xl mx-auto p-6">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background_clr p-6">
-      {/* Navigation bar for students */}
+      {/* Navigation bar */}
       <NavBar />
 
-      {/* Main content area */}
+      {/* Main content with job details */}
       <div className="max-w-4xl mx-auto p-6">
         {/* Job details card */}
         <div className="bg-gray-200 rounded-md p-6 mb-6">
-          <h1 className="text-xl font-bold">
-            Research Assistant - Machine Learning Lab
-          </h1>
+          <h1 className="text-xl font-bold">{jobDetails.jobTitle}</h1>
           <p className="mb-1">
-            Professor: Dr. John Doe | Lab: Computer Science Laboratory
+            Professor: {jobDetails.professorName} | Lab: {jobDetails.labName}
           </p>
           <p className="mb-2">
-            <strong>Deadline: April 1, 2025</strong>
+            <strong>Deadline: {jobDetails.deadline}</strong>
           </p>
 
-          {/* Job description */}
-          <p className="mb-4">
-            As a Machine Learning Research Assistant, you will support the
-            development and evaluation of machine learning models by assisting
-            with data preprocessing, feature engineering, and model
-            experimentation. Your responsibilities may include collecting and
-            cleaning large datasets, implementing and optimizing algorithms, and
-            running experiments to compare different model architectures. You
-            will work closely with researchers and faculty members to analyze
-            results, interpret findings, and document methodologies for research
-            publications. Additionally, you may contribute to developing tools
-            or frameworks that facilitate model deployment and scalability.
-            Strong programming skills in Python, experience with ML libraries
-            such as TensorFlow or PyTorch, and familiarity with statistical
-            methods are essential for this role.
-          </p>
+          <p className="mb-4">{jobDetails.description}</p>
 
-          {/* Additional job details */}
           <div className="mb-4">
-            <p className="font-bold mb-1">Hours: 10-15 hours per week</p>
-            <p className="font-bold mb-1">Term: Spring 2025</p>
-            <p className="font-bold mb-1">Room: ECCS 4.424</p>
-            <p className="font-bold mb-1">Compensation: $15/hr</p>
+            <p className="font-bold mb-1">Hours: {jobDetails.hoursPerWeek}</p>
+            <p className="font-bold mb-1">Term: {jobDetails.term}</p>
+            <p className="font-bold mb-1">Room: {jobDetails.room}</p>
+            <p className="font-bold mb-1">
+              Compensation: {jobDetails.compensation}
+            </p>
           </div>
 
-          {/* Job requirements */}
           <div>
             <h2 className="font-bold mb-1">Requirements</h2>
             <ul className="list-disc ml-6">
-              <li>Junior or Senior standing</li>
-              <li>Minimum GPA of 3.0</li>
-              <li>Coursework in Machine Learning and Databases</li>
-              <li>
-                Proficiency in Python (NumPy, Pandas, Scikit-learn, TensorFlow,
-                PyTorch)
-              </li>
-              <li>
-                Experience with data preprocessing, feature engineering, and
-                model training
-              </li>
-              <li>
-                Knowledge of deep learning architectures (CNNs, RNNs,
-                Transformers, etc.)
-              </li>
-              <li>
-                Familiarity with natural language processing (NLP) or computer
-                vision is a plus
-              </li>
-              <li>
-                Ability to implement, fine-tune, and evaluate ML models using
-                industry-standard tools
-              </li>
+              {jobDetails.requirements && jobDetails.requirements.length > 0 ? (
+                jobDetails.requirements.map((req, index) => (
+                  <li key={index}>{req}</li>
+                ))
+              ) : (
+                <li>No specific requirements listed</li>
+              )}
             </ul>
           </div>
         </div>
@@ -205,41 +270,30 @@ const ApplyToPosition = () => {
             />
           </div>
 
-          {/* Resume upload section */}
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2">Resume</label>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept=".pdf,.doc,.docx"
-                  className="hidden"
-                  id="resume-upload"
-                />
-                <button
-                  type="button"
-                  onClick={handleAttachClick}
-                  className="bg-orange-300 px-4 py-2 rounded-md hover:bg-orange-400 transition flex items-center"
-                >
-                  <FiPaperclip className="mr-2" />
-                  Attach Resume
-                </button>
-                {resumeFile && (
-                  <span className="ml-3 text-gray-600">{resumeFile.name}</span>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
-              >
-                Submit Application
-              </button>
-            </div>
-            <p className="text-sm text-gray-500 mt-1">
-              Accepted formats: PDF, DOC, DOCX
-            </p>
+          {/* Resume link input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="resume_link">
+              Resume Link
+            </label>
+            <input
+              type="url"
+              id="resume_link"
+              name="resume_link"
+              value={formData.resume_link}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-md"
+              placeholder="Enter the link to your resume"
+              required
+            />
+          </div>
+
+          <div className="flex items-center justify-between mt-4">
+            <button
+              type="submit"
+              className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
+            >
+              Submit Application
+            </button>
           </div>
         </form>
       </div>
