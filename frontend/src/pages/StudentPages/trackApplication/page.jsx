@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FiSearch, FiChevronDown } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../../../Components/NavBarStudent";
 
 const TrackApplication = () => {
+  const navigate = useNavigate();
   // State to store actual application data from API
   const [applications, setApplications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -222,7 +224,14 @@ const TrackApplication = () => {
                     </span>
                   </div>
                   <div>
-                    <button className="px-3 py-1 bg-orange-300 text-pink-500 rounded-md text-xs font-medium">
+                    <button
+                      className="px-3 py-1 bg-orange-300 text-pink-500 rounded-md text-xs font-medium"
+                      onClick={() =>
+                        navigate(
+                          `/applyToPosition/${app.jobId}?view=true&applicationId=${app.id}`
+                        )
+                      }
+                    >
                       View Application
                     </button>
                   </div>

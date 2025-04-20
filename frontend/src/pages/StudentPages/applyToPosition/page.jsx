@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../../../Components/NavBarStudent";
-// You might need to import this from your modules folder
 import { requestToUrl } from "../../../modules/requestHelpers";
 
 const ApplyToPosition = () => {
   // Get jobId from URL parameters
   const { jobId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if we're in view mode
+  const params = new URLSearchParams(location.search);
+  const isViewMode = params.get("view") === "true";
+  const applicationId = params.get("applicationId");
 
   // State for job details and loading state
   const [jobDetails, setJobDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentStudentId, setCurrentStudentId] = useState(null);
-  // Add professor state
   const [professor, setProfessor] = useState(null);
 
   // State to manage form data
@@ -148,6 +152,76 @@ const ApplyToPosition = () => {
     }
   }, []);
 
+  // Add function to fetch application details
+  const fetchApplicationDetails = async (appId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5002/GET/JobApplication/one?application_id=${appId}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Fetched application data:", data);
+
+      if (data && data[0]) {
+        const application = data[0];
+        console.log("Application details:", application);
+
+        // Parse documents_json if it exists
+        let resumeLink = "";
+
+        if (application.documents_json) {
+          try {
+            // It could be a string or already an object
+            const documentsObj =
+              typeof application.documents_json === "string"
+                ? JSON.parse(application.documents_json)
+                : application.documents_json;
+
+            console.log("Documents object:", documentsObj);
+
+            if (documentsObj && documentsObj.resume) {
+              resumeLink = documentsObj.resume;
+              console.log("Found resume link:", resumeLink);
+            }
+          } catch (e) {
+            console.error("Error parsing documents_json:", e);
+          }
+        }
+
+        // Set form data with application details
+        setFormData({
+          research_experience: application.research_experience || "",
+          hours_per_week: application.hours_per_week || "",
+          basic_student_response: application.basic_student_response || "",
+          resume_link: resumeLink,
+        });
+
+        console.log("Updated form data:", {
+          research_experience: application.research_experience || "",
+          hours_per_week: application.hours_per_week || "",
+          basic_student_response: application.basic_student_response || "",
+          resume_link: resumeLink,
+        });
+      }
+
+      return data[0];
+    } catch (err) {
+      console.error(`Error fetching application ID ${appId}:`, err);
+      return null;
+    }
+  };
+
+  // Add new useEffect for fetching application details when in view mode
+  useEffect(() => {
+    if (isViewMode && applicationId) {
+      fetchApplicationDetails(applicationId);
+    }
+  }, [isViewMode, applicationId]);
+
   // Handler for input field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -174,7 +248,6 @@ const ApplyToPosition = () => {
 
     try {
       const url = `http://localhost:5002/POST/JobApplication/add`;
-
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
@@ -248,7 +321,6 @@ const ApplyToPosition = () => {
           <p className="mb-2">
             <strong>Deadline: {jobDetails.deadline}</strong>
           </p>
-
           <p className="mb-4">{jobDetails.description}</p>
 
           <div className="mb-4">
@@ -279,7 +351,9 @@ const ApplyToPosition = () => {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-md shadow-md"
         >
-          <h2 className="text-xl font-bold mb-4">Application Form</h2>
+          <h2 className="text-xl font-bold mb-4">
+            {isViewMode ? "Application Details" : "Application Form"}
+          </h2>
 
           {/* Research experience input */}
           <div className="mb-4">
@@ -296,8 +370,11 @@ const ApplyToPosition = () => {
               value={formData.research_experience}
               onChange={handleChange}
               min="0"
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${
+                isViewMode ? "bg-gray-100" : ""
+              }`}
               required
+              disabled={isViewMode}
             />
           </div>
 
@@ -317,8 +394,11 @@ const ApplyToPosition = () => {
               onChange={handleChange}
               min="1"
               max="40"
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${
+                isViewMode ? "bg-gray-100" : ""
+              }`}
               required
+              disabled={isViewMode}
             />
           </div>
 
@@ -337,9 +417,12 @@ const ApplyToPosition = () => {
               value={formData.basic_student_response}
               onChange={handleChange}
               rows="6"
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${
+                isViewMode ? "bg-gray-100" : ""
+              }`}
               placeholder="Please describe your relevant skills and experience, how you can contribute to this lab, and why you are interested in this position..."
               required
+              disabled={isViewMode}
             />
           </div>
 
@@ -354,19 +437,32 @@ const ApplyToPosition = () => {
               name="resume_link"
               value={formData.resume_link}
               onChange={handleChange}
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${
+                isViewMode ? "bg-gray-100" : ""
+              }`}
               placeholder="Enter the link to your resume"
               required
+              disabled={isViewMode}
             />
           </div>
 
           <div className="flex items-center justify-between mt-4">
-            <button
-              type="submit"
-              className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
-            >
-              Submit Application
-            </button>
+            {isViewMode ? (
+              <button
+                type="button"
+                onClick={() => navigate("/trackApplication")}
+                className="bg-gray-300 text-black px-6 py-2 rounded-md hover:bg-gray-400 transition"
+              >
+                Back to Applications
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
+              >
+                Submit Application
+              </button>
+            )}
           </div>
         </form>
       </div>
