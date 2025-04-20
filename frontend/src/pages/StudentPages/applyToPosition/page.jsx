@@ -104,6 +104,7 @@ const ApplyToPosition = () => {
           term: foundJob.term || "Not specified",
           room: foundJob.location || "Not specified",
           compensation: foundJob.compensation || "Not specified",
+          status: foundJob.status || "unknown", // Add this line to store the job status
           requirements:
             [
               foundJob.req_majors,
@@ -346,125 +347,151 @@ const ApplyToPosition = () => {
           </div>
         </div>
 
-        {/* Application form */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-md shadow-md"
-        >
-          <h2 className="text-xl font-bold mb-4">
-            {isViewMode ? "Application Details" : "Application Form"}
-          </h2>
-
-          {/* Research experience input */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 mb-2"
-              htmlFor="research_experience"
+        {/* Application form - Check job status before allowing application */}
+        {!isViewMode &&
+        jobDetails.status &&
+        jobDetails.status.toLowerCase() === "filled" ? (
+          <div className="bg-white p-6 rounded-md shadow-md">
+            <h2 className="text-xl font-bold mb-4 text-red-600">
+              Position Filled
+            </h2>
+            <p className="mb-4">
+              This position is no longer accepting applications.
+            </p>
+            <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-4">
+              <p>
+                This position has been filled and is not accepting any new
+                applications.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("/jobPostings")}
+              className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
             >
-              Research Experience (number of semesters)
-            </label>
-            <input
-              type="number"
-              id="research_experience"
-              name="research_experience"
-              value={formData.research_experience}
-              onChange={handleChange}
-              min="0"
-              className={`w-full p-2 border rounded-md ${
-                isViewMode ? "bg-gray-100" : ""
-              }`}
-              required
-              disabled={isViewMode}
-            />
+              Back to Job Listings
+            </button>
           </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-6 rounded-md shadow-md"
+          >
+            <h2 className="text-xl font-bold mb-4">
+              {isViewMode ? "Application Details" : "Application Form"}
+            </h2>
 
-          {/* Available hours input */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 mb-2"
-              htmlFor="hours_per_week"
-            >
-              Available Hours Per Week
-            </label>
-            <input
-              type="number"
-              id="hours_per_week"
-              name="hours_per_week"
-              value={formData.hours_per_week}
-              onChange={handleChange}
-              min="1"
-              max="40"
-              className={`w-full p-2 border rounded-md ${
-                isViewMode ? "bg-gray-100" : ""
-              }`}
-              required
-              disabled={isViewMode}
-            />
-          </div>
-
-          {/* Student response textarea */}
-          <div className="mb-6">
-            <label
-              className="block text-gray-700 mb-2"
-              htmlFor="basic_student_response"
-            >
-              Describe your skills, how you can contribute to this lab, and your
-              interest in this position
-            </label>
-            <textarea
-              id="basic_student_response"
-              name="basic_student_response"
-              value={formData.basic_student_response}
-              onChange={handleChange}
-              rows="6"
-              className={`w-full p-2 border rounded-md ${
-                isViewMode ? "bg-gray-100" : ""
-              }`}
-              placeholder="Please describe your relevant skills and experience, how you can contribute to this lab, and why you are interested in this position..."
-              required
-              disabled={isViewMode}
-            />
-          </div>
-
-          {/* Resume link input */}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="resume_link">
-              Resume Link
-            </label>
-            <input
-              type="url"
-              id="resume_link"
-              name="resume_link"
-              value={formData.resume_link}
-              onChange={handleChange}
-              className={`w-full p-2 border rounded-md ${
-                isViewMode ? "bg-gray-100" : ""
-              }`}
-              placeholder="Enter the link to your resume"
-              required
-              disabled={isViewMode}
-            />
-          </div>
-
-          <div className="flex items-center justify-between mt-4">
-            {isViewMode ? (
-              <button
-                type="button"
-                onClick={() => navigate("/trackApplication")}
-                className="bg-gray-300 text-black px-6 py-2 rounded-md hover:bg-gray-400 transition"
+            {/* Research experience input */}
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 mb-2"
+                htmlFor="research_experience"
               >
-                Back to Applications
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
+                Research Experience (number of semesters)
+              </label>
+              <input
+                type="number"
+                id="research_experience"
+                name="research_experience"
+                value={formData.research_experience}
+                onChange={handleChange}
+                min="0"
+                className={`w-full p-2 border rounded-md ${
+                  isViewMode ? "bg-gray-100" : ""
+                }`}
+                required
+                disabled={isViewMode}
+              />
+            </div>
+
+            {/* Available hours input */}
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 mb-2"
+                htmlFor="hours_per_week"
               >
-                Submit Application
-              </button>
-            )}
-          </div>
-        </form>
+                Available Hours Per Week
+              </label>
+              <input
+                type="number"
+                id="hours_per_week"
+                name="hours_per_week"
+                value={formData.hours_per_week}
+                onChange={handleChange}
+                min="1"
+                max="40"
+                className={`w-full p-2 border rounded-md ${
+                  isViewMode ? "bg-gray-100" : ""
+                }`}
+                required
+                disabled={isViewMode}
+              />
+            </div>
+
+            {/* Student response textarea */}
+            <div className="mb-6">
+              <label
+                className="block text-gray-700 mb-2"
+                htmlFor="basic_student_response"
+              >
+                Describe your skills, how you can contribute to this lab, and
+                your interest in this position
+              </label>
+              <textarea
+                id="basic_student_response"
+                name="basic_student_response"
+                value={formData.basic_student_response}
+                onChange={handleChange}
+                rows="6"
+                className={`w-full p-2 border rounded-md ${
+                  isViewMode ? "bg-gray-100" : ""
+                }`}
+                placeholder="Please describe your relevant skills and experience, how you can contribute to this lab, and why you are interested in this position..."
+                required
+                disabled={isViewMode}
+              />
+            </div>
+
+            {/* Resume link input */}
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2" htmlFor="resume_link">
+                Resume Link
+              </label>
+              <input
+                type="url"
+                id="resume_link"
+                name="resume_link"
+                value={formData.resume_link}
+                onChange={handleChange}
+                className={`w-full p-2 border rounded-md ${
+                  isViewMode ? "bg-gray-100" : ""
+                }`}
+                placeholder="Enter the link to your resume"
+                required
+                disabled={isViewMode}
+              />
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              {isViewMode ? (
+                <button
+                  type="button"
+                  onClick={() => navigate("/trackApplication")}
+                  className="bg-gray-300 text-black px-6 py-2 rounded-md hover:bg-gray-400 transition"
+                >
+                  Back to Applications
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
+                >
+                  Submit Application
+                </button>
+              )}
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
