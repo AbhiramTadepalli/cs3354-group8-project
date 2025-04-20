@@ -53,3 +53,17 @@ Milestones/Due Dates:
 <br>Phase 4: Integration Work ……………………………………………………Due: April 6, 2025
 <br>Phase 5: Complete and Prepare Presentation ………………………………....Due: April 20, 2025
 <br>Phase 6: Project Presentation ………………………………………………….Due: April 27, 2025
+
+
+<h4>Running the Project</h4>
+
+<!-- Set up the db -->
+<p>cd backend</p>
+<p>npm install</p>
+<p>node server.js</p>
+
+<!-- Set up frontend -->
+<p>cd frontend</p>
+<p>npm install</p>
+<p>npm start</p>
+
