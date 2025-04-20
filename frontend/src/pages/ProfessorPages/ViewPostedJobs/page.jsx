@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import NavBarProfessor from "../../../Components/NavBarProfessor";
 import { requestToUrl } from '../../../modules/requestHelpers';
+import { Link } from 'react-router-dom'; // Import Link component
 
 const ViewPostedJobs = () => {
 
@@ -103,7 +104,11 @@ const ViewPostedJobs = () => {
             {/* Posted Jobs */}
             {jobPostings.map((job) => (
               /* Each row is a Job the professor has posted */
-              <tr key={job.job_id} className="text-lg text-center border-b">
+              <tr 
+                key={job.job_id} 
+                className="text-lg text-center border-b hover:bg-orange-200 cursor-pointer"
+                onClick={() => window.location.href = `/editJob/${job.job_id}`}
+              >
                 <td className="p-2 text-center">
                   <img
                     src={job.profilePicUrl}
@@ -119,8 +124,12 @@ const ViewPostedJobs = () => {
                 <td className="p-2">{job.numAccepted}</td>
                 <td className="p-2">{job.numRejected}</td>
                 <td className="p-2 text-right pr-8">
-                  <button onClick={() => console.log("navigate")} /* Need to implement navigation logic */
+                  <button 
                     className="px-4 py-2 text-dark_pink_clr rounded"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Stop the row click event from triggering
+                      window.location.href = `/viewApplications/${job.job_id}`; // Navigate to applications view instead
+                    }}
                   >
                     View Applications
                   </button>

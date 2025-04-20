@@ -34,6 +34,23 @@ const JobPostingDetails = () => {
     }
   };
 
+  const formatDate = (mysqlDate) => {
+    if (!mysqlDate) return "Not specified";
+    
+    // Create a new Date object from the MySQL date string
+    const date = new Date(mysqlDate);
+    
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return "Invalid date";
+    
+    // Format the date as MM/DD/YYYY
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${month}/${day}/${year}`;
+  };
+
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
@@ -180,7 +197,6 @@ const JobPostingDetails = () => {
               <div className="space-y-3">
                 <p><span className="font-semibold">Hours:</span> {job.hours || "Not specified"}</p>
                 <p><span className="font-semibold">Term:</span> {job.term || "Not specified"}</p>
-                <p><span className="font-semibold">Room:</span> {job.location || "Not specified"}</p>
                 <p><span className="font-semibold">Compensation:</span> {job.compensation || "Not specified"}</p>
               </div>
             </div>
@@ -228,7 +244,7 @@ const JobPostingDetails = () => {
               </p>
               
               <h3 className="text-xl font-semibold mb-4">Deadline:</h3>
-              <p className="mb-6">{job.application_deadline || "Not specified"}</p>
+              <p className="mb-6">{formatDate(job.application_deadline)}</p>
               
               <h3 className="text-xl font-semibold mb-4">Reading Material:</h3>
               <ul>
