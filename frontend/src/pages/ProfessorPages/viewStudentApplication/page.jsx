@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from '../../../Components/NavBarStudent';
+import NavBar from '../../../Components/NavBarProfessor';
 import { useParams } from 'react-router-dom';
 
 // Status styling
