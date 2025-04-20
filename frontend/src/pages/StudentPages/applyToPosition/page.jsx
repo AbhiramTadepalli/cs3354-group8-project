@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import NavBar from "../../../Components/NavBarStudent";
+// You might need to import this from your modules folder
+import { requestToUrl } from "../../../modules/requestHelpers";
 
 const ApplyToPosition = () => {
   // Get jobId from URL parameters
@@ -11,6 +13,9 @@ const ApplyToPosition = () => {
   const [jobDetails, setJobDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentStudentId, setCurrentStudentId] = useState(null);
+  // Add professor state
+  const [professor, setProfessor] = useState(null);
 
   // State to manage form data
   const [formData, setFormData] = useState({
@@ -19,6 +24,32 @@ const ApplyToPosition = () => {
     basic_student_response: "",
     resume_link: "",
   });
+
+  // Function to fetch professor details by ID
+  const fetchProfessorById = async (professorId) => {
+    try {
+      // Create the request object
+      const requestParams = { professor_id: professorId };
+
+      // Use the requestToUrl function to convert the request object to URL parameters
+      const queryParams = requestToUrl(requestParams);
+
+      // Make a GET request with query parameters in the URL
+      const response = await fetch(
+        `http://localhost:5002/GET/Professor/one${queryParams}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data[0]; // Assuming it returns an array with a single professor
+    } catch (err) {
+      console.error(`Error fetching professor ID ${professorId}:`, err);
+      return null;
+    }
+  };
 
   // Fetch job details when component mounts
   useEffect(() => {
@@ -48,12 +79,20 @@ const ApplyToPosition = () => {
           throw new Error(`Job with ID ${jobId} not found`);
         }
 
+        // Fetch professor info if professor_id exists
+        if (foundJob.professor_id) {
+          const professorData = await fetchProfessorById(foundJob.professor_id);
+          if (professorData) {
+            console.log("Professor data:", professorData);
+            setProfessor(professorData);
+          }
+        }
+
         // Transform job data to match expected format
         setJobDetails({
           jobID: foundJob.job_id,
           jobTitle: foundJob.job_title || "Research Position",
-          professorName:
-            `Professor ID: ${foundJob.professor_id}` || "Professor Name",
+          professorId: foundJob.professor_id, // Keep the ID for reference if needed
           labName: foundJob.lab_name || "Lab Name",
           deadline: foundJob.application_deadline || "Not specified",
           description: foundJob.job_description || "No description available",
@@ -79,6 +118,36 @@ const ApplyToPosition = () => {
     fetchJobDetails();
   }, [jobId]);
 
+  // Fetch current student ID from localStorage when component mounts
+  useEffect(() => {
+    try {
+      // Get user object from localStorage
+      const userJSON = localStorage.getItem("user");
+
+      if (!userJSON) {
+        console.log("No user found in localStorage");
+        return;
+      }
+
+      const user = JSON.parse(userJSON);
+      console.log("User from localStorage:", user);
+
+      // For students, we need the student_id field (not user_id)
+      const studentId = user.student_id;
+      console.log("Found student ID:", studentId);
+
+      if (!studentId) {
+        console.warn("No student ID found in user data");
+        // Use fallback for testing if needed
+        setCurrentStudentId(1);
+      } else {
+        setCurrentStudentId(studentId);
+      }
+    } catch (error) {
+      console.error("Error retrieving student ID:", error);
+    }
+  }, []);
+
   // Handler for input field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,7 +164,7 @@ const ApplyToPosition = () => {
     // Convert form data to JSON for submission
     const submitData = {
       job_id: parseInt(jobDetails.jobID) || 1,
-      student_id: 1,
+      student_id: currentStudentId || 1, // Use the retrieved student ID or default to 1 if not found
       research_experience: parseInt(formData.research_experience) || 0,
       hours_per_week: parseInt(formData.hours_per_week) || 0,
       basic_student_response: formData.basic_student_response || "",
@@ -170,7 +239,11 @@ const ApplyToPosition = () => {
         <div className="bg-gray-200 rounded-md p-6 mb-6">
           <h1 className="text-xl font-bold">{jobDetails.jobTitle}</h1>
           <p className="mb-1">
-            Professor: {jobDetails.professorName} | Lab: {jobDetails.labName}
+            Professor:{" "}
+            {professor
+              ? `${professor.first_name} ${professor.last_name}`
+              : `Professor ID: ${jobDetails.professorId}`}{" "}
+            | Lab: {jobDetails.labName}
           </p>
           <p className="mb-2">
             <strong>Deadline: {jobDetails.deadline}</strong>

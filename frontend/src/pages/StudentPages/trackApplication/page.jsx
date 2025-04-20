@@ -79,16 +79,47 @@ const TrackApplication = () => {
             const jobData = await jobResponse.json();
             console.log(`Job details for job ${application.job_id}:`, jobData);
 
+            // Fetch professor details if professor_id exists
+            let professorName = "Unknown";
+            if (jobData[0] && jobData[0].professor_id) {
+              try {
+                const requestParams = { professor_id: jobData[0].professor_id };
+                const queryParams = new URLSearchParams(
+                  requestParams
+                ).toString();
+
+                const professorResponse = await fetch(
+                  `http://localhost:5002/GET/Professor/one?${queryParams}`
+                );
+
+                if (professorResponse.ok) {
+                  const professorData = await professorResponse.json();
+                  if (professorData[0]) {
+                    professorName = `${professorData[0].first_name} ${professorData[0].last_name}`;
+                  }
+                }
+              } catch (error) {
+                console.error("Error fetching professor data:", error);
+              }
+            }
+
+            // Format the date properly
+            const applicationDate =
+              application.submission_date ||
+              application.application_date ||
+              application.created_at;
+            const formattedDate = applicationDate
+              ? new Date(applicationDate).toLocaleDateString()
+              : "Not recorded";
+
             // Combine job and application data
             enhancedApplications.push({
               id: application.application_id,
-              jobNumber: `Job #${application.job_id}`,
-              lab: jobData.lab_name || "Unknown",
-              professor: `Professor ID: ${jobData.professor_id}` || "Unknown",
-              role: jobData.job_title || "Unknown",
-              dateApplied: application.application_date
-                ? new Date(application.application_date).toLocaleDateString()
-                : "Not recorded",
+              jobId: application.job_id,
+              jobTitle: jobData[0]?.job_title || "Unknown Position",
+              lab: jobData[0]?.lab_name || "Unknown Lab",
+              professor: professorName,
+              dateApplied: formattedDate,
               status: application.status || "Applied",
             });
           } catch (error) {
@@ -149,9 +180,9 @@ const TrackApplication = () => {
               <div>Lab</div>
               <div>Professor</div>
               <div>ID</div>
-              <div>Role</div>
-              <div>Date Applied</div>
+              <div>Applied On</div>
               <div>Status</div>
+              <div>Action</div>
             </div>
 
             {/* Table Body */}
@@ -159,7 +190,7 @@ const TrackApplication = () => {
               {applications.map((app, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-8 p-3 border-b border-orange-300 items-center"
+                  className="grid grid-cols-7 p-3 border-b border-orange-300 items-center"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
@@ -175,12 +206,11 @@ const TrackApplication = () => {
                         ></path>
                       </svg>
                     </div>
-                    <span>{app.jobNumber}</span>
+                    <span>{app.jobTitle}</span>
                   </div>
                   <div>{app.lab}</div>
                   <div>{app.professor}</div>
                   <div>{app.id}</div>
-                  <div>{app.role}</div>
                   <div>{app.dateApplied}</div>
                   <div>
                     <span
