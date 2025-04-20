@@ -46,7 +46,7 @@ const NavBarProfessor = () => {
 
         {/* Navigation */}
         <nav className="flex space-x-8 text-xl items-center">
-          <a href="/viewPostedJobs" className="hover:underline">Home</a>
+          <a href="/viewPostedJobs" className="hover:underline"> Professor Home</a>
           <a href="/addJob" className="hover:underline">Add Job Posting</a>
 
           {/* Profile Dropdown */}

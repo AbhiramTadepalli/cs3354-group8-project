@@ -276,17 +276,22 @@ const ViewStudentApplication = () => {
                 </p>
               </div>
               
-              <div>
-                <h3 className="text-lg font-medium">Resume</h3>
+              {/* Resume Section */}
+            <div>
+              <h3 className="text-lg font-medium">Resume</h3>
+              {documents.length > 0 && documents[0]?.url ? (
                 <a 
-                  href={studentData.resume_url || "#"} 
+                  href={documents[0].url} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="mt-1 inline-block hover:text-dark_pink_clr underline"
                 >
                   View Resume
                 </a>
-              </div>
+              ) : (
+                <p className="mt-1 text-gray-600 italic">No resume URL available</p>
+              )}
+            </div>
               
               {documents.length > 0 && (
                 <div>

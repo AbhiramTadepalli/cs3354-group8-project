@@ -42,22 +42,12 @@ const NavBar = () => {
               className="h-32 w-auto mr-4"
             />
           </a>
-          <div className="relative ml-12">
-            <div className="flex items-center bg-white rounded-xl p-2 py-5 pl-z w-[32rem]">
-              <FiSearch className="text-light_grey_color mr-2" />
-              <input
-                type="text"
-                placeholder="Search for Research"
-                className="w-full outline-none"
-              />
-            </div>
-          </div>
         </div>
 
         {/* Navigation */}
         <nav className="flex space-x-8 text-xl">
           <a href="/searchPage" className="hover:underline">
-            Home
+            Student Home
           </a>
 
           {/* Applications Dropdown */}

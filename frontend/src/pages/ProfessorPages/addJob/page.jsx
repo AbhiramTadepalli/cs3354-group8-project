@@ -312,7 +312,7 @@ const [formData, setFormData] = useState({
                 value={formData.requiredGradeLevel}
                 onChange={handleChange}
                 className="flex-1 p-2 border border-gray-300 rounded-md"
-                placeholder="e.g. Freshman, Junior, Sophomore, Senior"
+                placeholder="e.g. Freshman, Sophomore, Junior, Senior"
             />
         </div>
 
