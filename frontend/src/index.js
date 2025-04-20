@@ -45,7 +45,7 @@ root.render(
       <Route path = "/trackApplication" element = {<TrackApplication/>} />
       <Route path = "/editStudentProfile" element = {<EditStudentProfile/>} />
       <Route path = "/viewStudentProfile" element = {<ViewStudentProfile/>} />
-      <Route path = "/applyToPosition" element = {<ApplyToPosition/>} />
+      <Route path = "/applyToPosition/:job_id" element = {<ApplyToPosition/>} />
       <Route path = "/Bookmarked" element = {<Bookmarked/>} />
 
       {/* Prof. Pages */}
