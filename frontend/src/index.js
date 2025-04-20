@@ -54,7 +54,7 @@ root.render(
       <Route path = "/editProfProfile" element = {<EditProfProfile/>} />
       <Route path = "/viewProfProfile" element = {<ViewProfProfile/>} />
       <Route path = "/viewPostedJobs" element = {<ViewPostedJobs/>} />
-      <Route path = "/job_id" element = {<ViewJob/>} />
+      <Route path = "/viewJob/:job_id" element = {<ViewJob/>} />
       <Route path = "/viewStudentApplication/:application_id" element = {<ViewStudentApplication/>} />
       <Route path = "/myApplications" element = {<MyApplications/>} />
       <Route path = "/addJob" element = {<AddJob/>} />

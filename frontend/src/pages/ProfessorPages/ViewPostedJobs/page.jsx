@@ -128,7 +128,7 @@ const ViewPostedJobs = () => {
                     className="px-4 py-2 text-dark_pink_clr rounded"
                     onClick={(e) => {
                       e.stopPropagation(); // Stop the row click event from triggering
-                      window.location.href = `/viewApplications/${job.job_id}`; // Navigate to applications view instead
+                      window.location.href = `/viewJob/${job.job_id}`; // Navigate to applications view instead
                     }}
                   >
                     View Applications
