@@ -104,11 +104,11 @@ const CreateAccountPage = () => {
           department: formData.department,
           phone_no: formData.phoneNo
         };
-      } else if (selectedRole === 'admin') {
-        endpoint = 'http://localhost:5002/POST/Admin/add';
+      } else if (selectedRole === 'role') {
+        endpoint = 'http://localhost:5002/POST/role/add';
         payload = {
           ...userData
-          // No admin-specific fields based on the schema
+          // No role-specific fields based on the schema
         };
       }
       
@@ -145,7 +145,7 @@ const CreateAccountPage = () => {
       } else if (selectedRole === 'professor') {
         navigate('/login'); // Redirect professors to ViewPostedJobs
       } else {
-        // Default fallback for admin or other roles
+        // Default fallback for role or other roles
         navigate('/');
       }
       
@@ -186,9 +186,10 @@ const CreateAccountPage = () => {
               onChange={handleRoleChange}
             >
               {/* select user role*/}
+              <option value="role">Role</option>
               <option value="student">Student</option>
               <option value="professor">Professor</option>
-              <option value="admin">Admin</option>
+              
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
               <FiChevronDown className="w-5 h-5 text-black" />
@@ -217,15 +218,6 @@ const CreateAccountPage = () => {
             />
           </div>
           <div className="mb-4">
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleInputChange}
-              className="w-full p-4 border-none rounded bg-orange_clr text-lg placeholder-white placeholder-opacity-75"
-              disabled={loading}
-            />
           </div>
           <div className="mb-4">
             <input
