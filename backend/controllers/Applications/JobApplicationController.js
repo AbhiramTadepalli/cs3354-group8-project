@@ -47,7 +47,7 @@ exports.addJobApplication = async (req, res) => {
         await db.promise().beginTransaction(); // start a transaction
         
         // Check if job_id exists
-        const mockReq = { body: { job_id } };
+        const mockReq = { query : { job_id } };
         const mockRes = {
             statusCode: null,
             responseData: null,
