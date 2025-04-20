@@ -70,6 +70,7 @@ const EditProfProfile = () => {
       last_name: prof.last_name,
       email: prof.email,
       phone_no: prof.phone_no,
+      password_hash: prof.password_hash,
       department: prof.department,
       net_id: prof.net_id
     });
@@ -77,8 +78,11 @@ const EditProfProfile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
     // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
@@ -143,6 +147,8 @@ const EditProfProfile = () => {
     }
 
     try {
+      console.log("line 176 pass edit " + formData.password_hash);
+      console.log("line 176 fname edit " + formData.first_name);
       // Save photo to local storage if available
       let photoUpdated = false;
       if (photoPreview) {
@@ -150,7 +156,6 @@ const EditProfProfile = () => {
         photoUpdated = true;
       }
   
-      // Prepare the request body (no password included)
       const requestBody = {
         professor_id: professorId,
         user_id: userId,
@@ -160,6 +165,7 @@ const EditProfProfile = () => {
         phone_no: formData.phone_no,
         department: formData.department,
         net_id: formData.net_id,
+        password: formData.password_hash
       };
   
       const response = await fetch('http://localhost:5002/POST/Professor/modify', {

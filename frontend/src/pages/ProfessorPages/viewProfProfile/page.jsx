@@ -18,10 +18,8 @@ const ViewProfProfile = () => {
       try {
         // Try to get professor_id from localStorage
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        console.log(storedUser);
-
         const professorId = storedUser.professor_id;
-        console.log(professorId);
+        console.log("line 23 pass view " + storedUser.password_hash);
 
         if (!professorId) {
           setError("Professor ID not found. Please login again.");
@@ -69,13 +67,28 @@ const ViewProfProfile = () => {
   }, []);
 
   const handleEditProfile = () => {
+    let password = professor.password_hash;
+
+    // If the password_hash is not available, use the password from storedUser or another secure source
+    if (!password) {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      password = storedUser ? storedUser.password_hash : null; // Make sure to handle null or undefined case
+      if (!password) {
+        console.error('Password is still missing.');
+        setError('Password is missing. Please try again later.');
+        return;
+      }
+    }
+  
     // Navigate to edit profile page with professor and user IDs
     navigate('../editProfProfile', { 
       state: { 
         professorId: professor.professor_id,
-        userId: professor.user_id
-      } 
+        userId: professor.user_id,
+      }  
     });
+    console.log("line 76 userid view " + professor.professor_id);
+    console.log("line 76 pass view #1" + professor.password_hash);
   };
 
   if (isLoading) return <div className="w-screen h-screen bg-red-50 p-8 flex justify-center items-center text-2xl">Loading profile...</div>;
