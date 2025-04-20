@@ -26,8 +26,18 @@ const NavBar = () => {
   }, []);
 
   const handleSignOut = () => {
-    localStorage.clear();
-    navigate('/login');
+  // Back up bookmarks
+  const bookmarks = localStorage.getItem("bookmarked_jobs");
+  
+  // clear everything
+  localStorage.clear();
+  
+  // Restore the bookmarks after clearing
+  if (bookmarks) {
+    localStorage.setItem("bookmarked_jobs", bookmarks);
+  }
+
+  navigate("/login");
   };
 
   return (
