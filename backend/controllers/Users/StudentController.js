@@ -75,7 +75,7 @@ exports.modifyStudent = async (req, res) => {
 
         // Modify the entry in the Students table
         const [studentResult] = await db.promise().query(
-            'UPDATE Students SET net_id = ?, major = ?, graduation_year = ? gpa = ? WHERE student_id = ?',
+            'UPDATE Students SET net_id = ?, major = ?, graduation_year = ?, gpa = ? WHERE student_id = ?',
             [net_id, major, graduation_year, gpa, student_id]
         );
 
