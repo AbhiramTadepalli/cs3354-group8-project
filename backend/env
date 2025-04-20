@@ -1,0 +1,5 @@
+DB_HOST='cometconnectdb.cm3wagi2uvf3.us-east-1.rds.amazonaws.com'
+DB_USER='admin'
+DB_PASS='Team8CometConnect!'
+DB_NAME='cometconnectdb'
+DB_PORT='3306'
