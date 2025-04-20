@@ -61,7 +61,7 @@ const EditStudentProfile = () => {
               first_name: student.first_name,
               last_name: student.last_name,
               email: student.email,
-              password: student.password_hash || "",
+              password: "", // Never expose password in frontend
               net_id: student.net_id,
               major: student.major,
               graduation_year: student.graduation_year,
@@ -109,12 +109,13 @@ const EditStudentProfile = () => {
     setIsLoading(true);
 
     const updatedStudent = {
-      user_id: formData.user_id,
-      student_id: formData.student_id,
+      user_id: parseInt(formData.user_id),
+      student_id: parseInt(formData.student_id),
       first_name: formData.first_name,
       last_name: formData.last_name,
       email: formData.email,
-      password: formData.password, // Caution: password is sent in plain text here
+      // If password is empty, don't send it at all
+      ...(formData.password ? { password: formData.password } : {}),
       net_id: formData.net_id,
       major: formData.major,
       graduation_year: formData.graduation_year,

@@ -64,34 +64,50 @@ exports.addStudent = async (req, res) => {
 // Controller function to modify fields for an existing Student in the table
 exports.modifyStudent = async (req, res) => {
     try {
-        const { user_id, student_id, email, password, first_name, last_name, net_id, major, graduation_year, gpa } = req.body;
-        await db.promise().beginTransaction(); // start a transaction
-
-        // Modify the student's info in the Users table
-        const [userResult] = await db.promise().query(
-            'UPDATE Users SET email = ?, password_hash = ?, first_name = ?, last_name = ? WHERE user_id = ?',
-            [email, password, first_name, last_name, user_id] // pass data in to modify
-        );
-
-        // Modify the entry in the Students table
-        const [studentResult] = await db.promise().query(
-            'UPDATE Students SET net_id = ?, major = ?, graduation_year = ?, gpa = ? WHERE student_id = ?',
-            [net_id, major, graduation_year, gpa, student_id]
-        );
-
-        if (userResult.affectedRows < 1 || studentResult.affectedRows < 1) // this means nothing would be modified - so tell the user
-            return res.status(404).json({ error: `There is no Student with the given combination of user_id=${user_id} & student_id=${student_id}` })
-        
-        // Commit the transaction
-        await db.promise().commit();
-
-        res.status(200).json({
-            message: `Student '${first_name} ${last_name}' modified successfully`,
-            student_id: student_id,
-            user_id: user_id
-        });
+      const { user_id, student_id, email, password, first_name, last_name, net_id, major, graduation_year, gpa } = req.body;
+      
+      console.log("Received data:", req.body); // Debug log
+      
+      await db.promise().beginTransaction(); // start a transaction
+      
+      // Build dynamic queries to handle optional password update
+      let userUpdateFields = 'email = ?, first_name = ?, last_name = ?';
+      let userUpdateValues = [email, first_name, last_name];
+      
+      // Only update password if it's provided and not empty
+      if (password && password !== '' && password !== undefined) {
+        userUpdateFields += ', password_hash = ?';
+        userUpdateValues.push(password);
+      }
+      
+      userUpdateValues.push(user_id);
+      
+      // Modify the student's info in the Users table
+      const [userResult] = await db.promise().query(
+        `UPDATE Users SET ${userUpdateFields} WHERE user_id = ?`,
+        userUpdateValues
+      );
+      
+      // Modify the entry in the Students table
+      const [studentResult] = await db.promise().query(
+        'UPDATE Students SET net_id = ?, major = ?, graduation_year = ?, gpa = ? WHERE student_id = ?',
+        [net_id, major, graduation_year, gpa, student_id]
+      );
+      
+      if (userResult.affectedRows < 1 || studentResult.affectedRows < 1) // this means nothing would be modified - so tell the user
+        return res.status(404).json({ error: `There is no Student with the given combination of user_id=${user_id} & student_id=${student_id}` });
+      
+      // Commit the transaction
+      await db.promise().commit();
+      
+      res.status(200).json({
+        message: `Student '${first_name} ${last_name}' modified successfully`,
+        student_id: student_id,
+        user_id: user_id
+      });
     } catch (error) {
-        await db.promise().rollback(); // don't push the changes if it errors
-        res.status(400).json({ error: error.toString() });
+      await db.promise().rollback(); // don't push the changes if it errors
+      console.error("Error in modifyStudent:", error); // Debug log
+      res.status(400).json({ error: error.toString() });
     }
-};
+  };

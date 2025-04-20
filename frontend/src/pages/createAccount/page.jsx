@@ -197,7 +197,7 @@ const CreateAccountPage = () => {
           // Student-specific fields
           net_id: formData.netId,
           major: formData.major,
-          Graduation_year: formData.graduationYear,
+          graduation_year: formData.graduationYear,
           gpa: formData.gpa
         };
       } else if (selectedRole === 'professor') {
