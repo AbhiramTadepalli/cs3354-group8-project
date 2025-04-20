@@ -26,7 +26,7 @@ import MyApplications from './pages/ProfessorPages/myApplications/page';
 import ViewPostedJobs from './pages/ProfessorPages/ViewPostedJobs/page';
 import ViewJob from './pages/ProfessorPages/ViewJob/page.jsx';
 import ViewStudentApplication from './pages/ProfessorPages/viewStudentApplication/page';
-
+import AddJob from './pages/ProfessorPages/addJob/page.jsx';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -56,6 +56,8 @@ root.render(
       <Route path = "/viewPostedJobs" element = {<ViewPostedJobs/>} />
       <Route path = "/job_id" element = {<ViewJob/>} />
       <Route path = "/job_id/app_id" element = {<ViewStudentApplication/>} />
+      <Route path = "/myApplications" element = {<MyApplications/>} />
+      <Route path = "/addJob" element = {<AddJob/>} />
 
 
     </Routes>
