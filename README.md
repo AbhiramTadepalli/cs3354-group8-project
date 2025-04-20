@@ -55,14 +55,15 @@ Milestones/Due Dates:
 <br>Phase 6: Project Presentation ………………………………………………….Due: April 27, 2025
 
 
-<h4>Running the Project </h4>
+<h4>Running the Project</h4>
 
-//set up the db
-cd backend
-npm install (install all dependencies for backend here)
-node server.js
+<!-- Set up the db -->
+<p>cd backend</p>
+<p>npm install</p>
+<p>node server.js</p>
 
-//set up frontend
-cd frontend
-npm install (install all dependencies for frontend here)
-npm start
+<!-- Set up frontend -->
+<p>cd frontend</p>
+<p>npm install</p>
+<p>npm start</p>
+
