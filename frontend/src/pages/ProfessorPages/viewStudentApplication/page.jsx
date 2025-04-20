@@ -137,9 +137,17 @@ const ViewStudentApplication = () => {
       // Handle documents_json properly - ensure it's a string for the backend
       if (applicationData.documents_json) {
         if (typeof applicationData.documents_json === 'object') {
+          // If it's an object, stringify it
           requestBody.documents_json = JSON.stringify(applicationData.documents_json);
-        } else {
-          requestBody.documents_json = applicationData.documents_json;
+        } else if (typeof applicationData.documents_json === 'string') {
+          // If it's already a string, check if it's valid JSON
+          try {
+            JSON.parse(applicationData.documents_json);
+            requestBody.documents_json = applicationData.documents_json;
+          } catch (e) {
+            console.error('Invalid JSON in documents_json, setting to empty array');
+            requestBody.documents_json = '[]';
+          }
         }
       } else {
         requestBody.documents_json = '[]';
@@ -187,21 +195,67 @@ const ViewStudentApplication = () => {
   let documents = [];
   try {
     if (applicationData.documents_json) {
-      // Check if documents_json is already an object
+      console.log('Raw documents_json:', applicationData.documents_json);
+      console.log('Type of documents_json:', typeof applicationData.documents_json);
+      
+      // Check if documents_json is an object with a resume property
       if (typeof applicationData.documents_json === 'object' && applicationData.documents_json !== null) {
-        documents = applicationData.documents_json;
-      } 
+        // Convert object to array format
+        if (applicationData.documents_json.resume) {
+          documents = [{
+            type: 'Resume',
+            url: applicationData.documents_json.resume
+          }];
+        }
+        // Check for any other properties in the object
+        Object.keys(applicationData.documents_json).forEach(key => {
+          if (key !== 'resume' && applicationData.documents_json[key]) {
+            documents.push({
+              type: key.charAt(0).toUpperCase() + key.slice(1),
+              url: applicationData.documents_json[key]
+            });
+          }
+        });
+      }
       // Check if it's a string that can be parsed as JSON
       else if (typeof applicationData.documents_json === 'string') {
-        // Only try to parse if it looks like JSON (starts with [ or {)
-        if (applicationData.documents_json.trim().startsWith('{') || 
-            applicationData.documents_json.trim().startsWith('[')) {
-          documents = JSON.parse(applicationData.documents_json);
+        try {
+          // Try parsing the string
+          const parsed = JSON.parse(applicationData.documents_json);
+          
+          // If parsed result is an array, use it directly
+          if (Array.isArray(parsed)) {
+            documents = parsed;
+          }
+          // If parsed result is an object, convert it to array format
+          else if (typeof parsed === 'object' && parsed !== null) {
+            if (parsed.resume) {
+              documents = [{
+                type: 'Resume',
+                url: parsed.resume
+              }];
+            }
+            // Check for any other properties in the object
+            Object.keys(parsed).forEach(key => {
+              if (key !== 'resume' && parsed[key]) {
+                documents.push({
+                  type: key.charAt(0).toUpperCase() + key.slice(1),
+                  url: parsed[key]
+                });
+              }
+            });
+          }
+        } catch (parseError) {
+          console.error('JSON Parse Error:', parseError);
+          console.error('Problematic JSON string:', applicationData.documents_json);
+          documents = [];
         }
       }
     }
+    
+    console.log('Final documents array:', documents);
   } catch (e) {
-    console.error('Error parsing documents JSON:', e);
+    console.error('Error in documents processing:', e);
   }
 
   return (
@@ -276,40 +330,35 @@ const ViewStudentApplication = () => {
                 </p>
               </div>
               
-              {/* Resume Section */}
-            <div>
-              <h3 className="text-lg font-medium">Resume</h3>
-              {documents.length > 0 && documents[0]?.url ? (
-                <a 
-                  href={documents[0].url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-block hover:text-dark_pink_clr underline"
-                >
-                  View Resume
-                </a>
-              ) : (
-                <p className="mt-1 text-gray-600 italic">No resume URL available</p>
-              )}
-            </div>
-              
-              {documents.length > 0 && (
+              {/* Documents Section with better error handling */}
+              {documents.length > 0 ? (
                 <div>
                   <h3 className="text-lg font-medium">Documents</h3>
                   <div className="mt-2 space-y-2">
                     {documents.map((doc, index) => (
                       <div key={index} className="flex items-center">
-                        <a 
-                          href={doc.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-block hover:text-dark_pink_clr underline"
-                        >
-                          {doc.type || `Document ${index + 1}`}
-                        </a>
+                        {doc?.url ? (
+                          <a 
+                            href={doc.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-block hover:text-dark_pink_clr underline"
+                          >
+                            {doc.type || `Document ${index + 1}`}
+                          </a>
+                        ) : (
+                          <p className="text-gray-600 italic">
+                            Document {index + 1} (No URL available)
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>
+                </div>
+              ) : (
+                <div>
+                  <h3 className="text-lg font-medium">Documents</h3>
+                  <p className="mt-1 text-gray-600 italic">No documents available</p>
                 </div>
               )}
               
@@ -327,8 +376,8 @@ const ViewStudentApplication = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="mb-4 md:mb-0">
                 <h3 className="text-lg font-bold">Current Status:</h3>
-                <span className={`mt-2 inline-block px-4 py-2 rounded-full text-sm font-semibold ${statusColors[status]}`}>
-                  {statusLabels[status]}
+                <span className={`mt-2 inline-block px-4 py-2 rounded-full text-sm font-semibold ${statusColors[applicationData.status]}`}>
+                  {statusLabels[applicationData.status]}
                 </span>
               </div>
               

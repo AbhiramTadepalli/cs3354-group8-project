@@ -366,7 +366,7 @@ const ApplyToPosition = () => {
             </div>
             <button
               type="button"
-              onClick={() => navigate("/jobPostings")}
+              onClick={() => navigate("/searchPage")}
               className="bg-orange-200 text-black px-6 py-2 rounded-md hover:bg-orange-300 transition"
             >
               Back to Job Listings
