@@ -89,7 +89,7 @@ const ViewPostedJobs = () => {
 
 
   return (
-    <>
+    <div className="bg-background_clr min-h-screen">
       <NavBarProfessor></NavBarProfessor>
       <div className="pb-8 pl-8 pr-8">
         <h1 className="text-4xl font-bold mb-4">Job #1 Name - Research Assistant Applications</h1>
@@ -149,7 +149,7 @@ const ViewPostedJobs = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   )
 }
 
