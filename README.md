@@ -71,6 +71,7 @@ npm start
 ```
 <-- Sample input -->
 > Professor username: apple@utdallas.edu | professor password: apple
+
 > Student username: sree@utdallas.edu | student password: sreenivas
 
 
