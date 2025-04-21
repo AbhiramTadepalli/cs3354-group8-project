@@ -57,13 +57,19 @@ Milestones/Due Dates:
 
 <h4>Running the Project</h4>
 
-<!-- Set up the db -->
+<-- Set up the db -->
 <p>cd backend</p>
 <p>npm install</p>
 <p>node server.js</p>
 
-<!-- Set up frontend -->
+<-- Set up frontend -->
 <p>cd frontend</p>
 <p>npm install</p>
 <p>npm start</p>
+
+<-- Sample input -->
+<p>Professor username: apple@utdallas.edu | professor password: apple </p>
+<p>Student username: sree@utdallas.edu | student password: sreenivas l</p>
+<p>npm start</p>
+
 
