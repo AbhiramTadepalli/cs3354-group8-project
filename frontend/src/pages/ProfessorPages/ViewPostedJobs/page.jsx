@@ -79,7 +79,7 @@ const ViewPostedJobs = () => {
   
 
   return (
-    <>
+    <div className="bg-background_clr min-h-screen">
       <NavBarProfessor></NavBarProfessor>
       <div className="pb-8 pl-8 pr-8">
         <h1 className="text-4xl font-bold mb-4">View Posted Jobs</h1>
@@ -117,12 +117,12 @@ const ViewPostedJobs = () => {
                   />
                 </td>
                 <td className="p-2">{job.job_title}</td>
-                <td className="p-2">{job.created_at}</td>
+                <td className="p-2">{new Date(job.created_at).toLocaleDateString('en-US')}</td>
                 <td className="p-2">{job.job_id}</td>
                 <td className="p-2 text-sm">{job.job_title}</td>
                 <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].length : 0}</td>
-                <td className="p-2">{job.numAccepted}</td>
-                <td className="p-2">{job.numRejected}</td>
+                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] == 'accepted' ? 1 : 0), 0) : 0}</td>
+                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] == 'rejected' ? 1 : 0), 0) : 0}</td>
                 <td className="p-2 text-right pr-8">
                   <button 
                     className="px-4 py-2 text-dark_pink_clr rounded"
@@ -139,7 +139,7 @@ const ViewPostedJobs = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   )
 }
 

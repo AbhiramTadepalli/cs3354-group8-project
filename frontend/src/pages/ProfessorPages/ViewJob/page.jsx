@@ -1,6 +1,8 @@
 // abhiram tadepalli
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBarProfessor from "../../../Components/NavBarProfessor";
+import { useParams } from 'react-router-dom';
+import { requestToUrl } from '../../../modules/requestHelpers';
 
 const ViewPostedJobs = () => {
 
@@ -43,9 +45,51 @@ const ViewPostedJobs = () => {
     },
   ];
 
+  const [jobApplications, setJobApplications] = useState([]); // State to hold job applications
+
+  const { job_id } = useParams(); // Get the job ID from the URL parameters
+  const application_request = {
+    "job_id": job_id
+  }
+  // Fetch applications
+  useEffect(() => {
+    // Define an async function inside useEffect
+    const fetchApplicationsAndStudents = async () => {
+      try {
+        // 1. Fetch job applications
+        const appRes = await fetch('http://localhost:5002/GET/JobApplication/job' + requestToUrl(application_request), {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (!appRes.ok) throw new Error('Network response was not ok');
+        const applications = await appRes.json();
+
+        // 2. For each application, fetch student data in parallel
+        const applicationsWithStudent = await Promise.all(applications.map(async (app) => {
+          const studentRes = await fetch('http://localhost:5002/GET/Student/one' + requestToUrl({ student_id: app.student_id }), {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (!studentRes.ok) throw new Error('Student fetch failed');
+          const studentData = await studentRes.json();
+
+          // Combine application and student data as needed
+          return { ...app, student: studentData[0] };
+        }));
+
+        // 3. Set the combined data into state
+        setJobApplications(applicationsWithStudent);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchApplicationsAndStudents();
+  }, []);
+
 
   return (
-    <>
+    <div className="bg-background_clr min-h-screen">
       <NavBarProfessor></NavBarProfessor>
       <div className="pb-8 pl-8 pr-8">
         <h1 className="text-4xl font-bold mb-4">Job #1 Name - Research Assistant Applications</h1>
@@ -69,9 +113,9 @@ const ViewPostedJobs = () => {
           </thead>
           <tbody className="bg-orange_clr">
             {/* Posted Jobs */}
-            {dummyApplications.map((application) => (
+            {jobApplications.map((application) => (
               /* Each row is a Student Application for the Job */
-              <tr key={application.appID} className="text-lg text-center border-b">
+              <tr key={application.application_id} className="text-lg text-center border-b">
                 <td className="p-2 text-center">
                   <img
                     src={application.profilePicUrl}
@@ -79,19 +123,22 @@ const ViewPostedJobs = () => {
                     className="w-10 h-10 rounded-full"
                   />
                 </td>
-                <td className="p-2">{application.student}</td>
-                <td className="p-2">{application.dateApplied}</td>
-                <td className="p-2">{application.graduation}</td>
-                <td className="p-2 text-sm">{application.exp}</td>
-                <td className="p-2">{application.major}</td>
-                <td className="p-2">{application.weeklyHours}</td>
+                <td className="p-2">{`${application.student.first_name} ${application.student.last_name}`}</td>
+                <td className="p-2">{new Date(application.submission_date).toLocaleDateString('en-US')}</td>
+                <td className="p-2">{application.student.graduation_year}</td>
+                <td className="p-2 text-sm">{application.research_experience}</td>
+                <td className="p-2">{application.student.major}</td>
+                <td className="p-2">{application.hours_per_week}</td>
                 <td className="flex justify-center items-center p-2">
                   <div className='rounded rounded-3xl w-fit p-2 px-4 bg-light_pink_clr'>
                     {application.status}
                   </div>
                 </td>
                 <td className="p-2 text-right pr-8">
-                  <button onClick={() => console.log("navigate")} /* Need to implement navigation logic */
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `/viewJob/${job_id}/viewStudentApplication/${application.application_id}`
+                  }} /* Need to implement navigation logic */
                     className="px-4 py-2 text-dark_pink_clr rounded"
                   >
                     View Applications
@@ -102,7 +149,7 @@ const ViewPostedJobs = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   )
 }
 
