@@ -202,37 +202,8 @@ const EditProfProfile = () => {
       <div className="w-full border-t border-black my-6"></div>
 
       <div className="flex items-center space-x-12 px-32">
-        <div className="flex flex-col items-center justify-start">
-          <div 
-            className="w-64 h-64 bg-gray-300 rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center"
-            onClick={handlePhotoClick}
-          >
-            {photoPreview ? (
-              <img 
-                src={photoPreview} 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-gray-500">No Photo</span>
-            )}
-          </div>
-          <input 
-            type="file" 
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*"
-            onChange={handlePhotoChange}
-          />
-          <button 
-            className="mt-4 px-6 py-2 bg-orange-300 rounded-full text-black text-2xl font-normal"
-            onClick={handlePhotoClick}
-          >
-            Edit Profile Photo
-          </button>
-        </div>
 
-        <div className="grid grid-cols-2 gap-10 flex-grow -mt-11">
+        <div className="grid grid-cols-2 gap-10 flex-grow">
           <div>
             <label className="text-2xl font-normal">First Name:</label>
             <input

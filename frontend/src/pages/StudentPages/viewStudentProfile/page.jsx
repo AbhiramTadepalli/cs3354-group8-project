@@ -111,24 +111,7 @@ const ViewStudentProfile = () => {
       <div className="text-4xl font-bold mb-6">My Profile</div>
 
       <div className="flex gap-12">
-        {/* Profile Image Section */}
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-64 h-64 bg-gray-300 rounded-2xl overflow-hidden flex items-center justify-center">
-            {profileImage ? (
-              <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-gray-500 text-xl">No Image</span>
-            )}
-          </div>
-
-          {/* Student name and graduation year */}
-          <div className="bg-orange-300 px-4 py-2 rounded-full text-black text-2xl text-center">
-            {studentInfo?.first_name + ' ' + studentInfo?.last_name}
-            <div className="text-lg">
-              {studentInfo?.graduation_year ? `Class of ${studentInfo.graduation_year}` : ''}
-            </div>
-          </div>
-        </div>
+        
 
         {/* Student Info Grid */}
         <div className="grid grid-cols-2 gap-6 w-full">

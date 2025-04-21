@@ -106,28 +106,9 @@ const ViewProfProfile = () => {
      
       {/* Profile Image and Form */}
       <div className="flex items-center space-x-12 px-32">
-        {/* Profile Image */}
-        <div className="flex flex-col items-center justify-start">
-          <div className="w-64 h-64 bg-gray-300 rounded-2xl overflow-hidden">
-            {profilePhotoUrl ? (
-              <img 
-                src={profilePhotoUrl} 
-                alt="Professor Profile" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500">
-                No Photo
-              </div>
-            )}
-          </div>
-          <div className="mt-4 px-6 py-2 bg-orange-300 rounded-full text-black text-2xl font-normal">
-            {`${professor.first_name} ${professor.last_name}`}
-          </div>
-        </div>
-       
+   
         {/* Form Fields */}
-        <div className="grid grid-cols-2 gap-10 flex-grow -mt-11">
+        <div className="grid grid-cols-2 gap-10 flex-grow ">
           <div>
             <label className="text-2xl font-normal">First Name:</label>
             <input 
