@@ -70,8 +70,8 @@ npm install
 npm start
 ```
 <-- Sample input -->
-<p>Professor username: apple@utdallas.edu | professor password: apple </p>
-<p>Student username: sree@utdallas.edu | student password: sreenivas </p>
+> Professor username: apple@utdallas.edu | professor password: apple
+> Student username: sree@utdallas.edu | student password: sreenivas
 
 
 <h4>Demo</h4>
