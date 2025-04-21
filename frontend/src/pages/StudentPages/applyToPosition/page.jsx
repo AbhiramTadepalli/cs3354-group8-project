@@ -55,6 +55,24 @@ const ApplyToPosition = () => {
     }
   };
 
+  // Add this formatDate function to your ApplyToPosition component
+  const formatDate = (mysqlDate) => {
+    if (!mysqlDate) return "Not specified";
+
+    // Create a new Date object from the MySQL date string
+    const date = new Date(mysqlDate);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return "Invalid date";
+
+    // Format the date as MM/DD/YYYY
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`;
+  };
+
   // Fetch job details when component mounts
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -98,7 +116,7 @@ const ApplyToPosition = () => {
           jobTitle: foundJob.job_title || "Research Position",
           professorId: foundJob.professor_id, // Keep the ID for reference if needed
           labName: foundJob.lab_name || "Lab Name",
-          deadline: foundJob.application_deadline || "Not specified",
+          deadline: formatDate(foundJob.application_deadline),
           description: foundJob.job_description || "No description available",
           hoursPerWeek: foundJob.hours || "Not specified",
           term: foundJob.term || "Not specified",
@@ -243,9 +261,14 @@ const ApplyToPosition = () => {
       research_experience: parseInt(formData.research_experience) || 0,
       hours_per_week: parseInt(formData.hours_per_week) || 0,
       basic_student_response: formData.basic_student_response || "",
-      status: "Applied",
+      status: "Submitted",
       documents_json: JSON.stringify({ resume: formData.resume_link || "" }),
     };
+
+    console.log(
+      "Submitting application with data:",
+      JSON.stringify(submitData)
+    );
 
     try {
       const url = `http://localhost:5002/POST/JobApplication/add`;
@@ -263,16 +286,45 @@ const ApplyToPosition = () => {
       }
 
       const result = await response.json();
+      const applicationId = result.message.split(" ")[2];
+
       alert(
-        `Application submitted successfully! Application ID: ${
-          result.message.split(" ")[2]
-        }`
+        `Application submitted successfully! Application ID: ${applicationId}`
       );
+
+      // Check the status after submission
+      await checkApplicationStatus(applicationId);
 
       // Redirect to track applications page after submission
       navigate("/trackApplication");
     } catch (error) {
       alert("Failed to submit application. Please try again.");
+    }
+  };
+
+  // Function to check application status
+  const checkApplicationStatus = async (applicationId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5002/GET/JobApplication/one?application_id=${applicationId}`
+      );
+
+      if (!response.ok) {
+        console.error(`Failed to check application status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Application after submission:", data[0]);
+
+      // If status is empty, try to update it
+      if (data[0] && !data[0].status) {
+        console.log("Status field is empty, attempting to update...");
+
+        // You could add code here to update the status if needed
+      }
+    } catch (error) {
+      console.error("Error checking application status:", error);
     }
   };
 
