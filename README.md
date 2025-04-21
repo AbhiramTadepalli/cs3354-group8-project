@@ -69,7 +69,6 @@ Milestones/Due Dates:
 
 <-- Sample input -->
 <p>Professor username: apple@utdallas.edu | professor password: apple </p>
-<p>Student username: sree@utdallas.edu | student password: sreenivas l</p>
-<p>npm start</p>
+<p>Student username: sree@utdallas.edu | student password: sreenivas </p>
 
 
