@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import NavBarProfessor from "../../../Components/NavBarProfessor";
 import { requestToUrl } from '../../../modules/requestHelpers';
-import { Link } from 'react-router-dom'; // Import Link component
 
 const ViewPostedJobs = () => {
 
@@ -93,7 +92,6 @@ const ViewPostedJobs = () => {
               <th className="text-center w-32">Job Title</th>
               <th className="text-center w-32">Date Posted</th>
               <th className="text-center w-32">Job ID</th>
-              <th className="text-center w-32">Role</th>
               <th className="text-center w-32">Applied</th>
               <th className="text-center w-32">Accepted</th>
               <th className="text-center w-32">Rejected</th>
@@ -109,20 +107,13 @@ const ViewPostedJobs = () => {
                 className="text-lg text-center border-b hover:bg-orange-200 cursor-pointer"
                 onClick={() => window.location.href = `/editJob/${job.job_id}`}
               >
-                <td className="p-2 text-center">
-                  <img
-                    src={job.profilePicUrl}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                </td>
+                <td className="p-2"></td>
                 <td className="p-2">{job.job_title}</td>
                 <td className="p-2">{new Date(job.created_at).toLocaleDateString('en-US')}</td>
                 <td className="p-2">{job.job_id}</td>
-                <td className="p-2 text-sm">{job.job_title}</td>
                 <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].length : 0}</td>
-                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] == 'accepted' ? 1 : 0), 0) : 0}</td>
-                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] == 'rejected' ? 1 : 0), 0) : 0}</td>
+                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] === 'accepted' ? 1 : 0), 0) : 0}</td>
+                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] === 'rejected' ? 1 : 0), 0) : 0}</td>
                 <td className="p-2 text-right pr-8">
                   <button 
                     className="px-4 py-2 text-dark_pink_clr rounded"
