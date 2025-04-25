@@ -24,6 +24,20 @@ const EditProfProfile = () => {
     net_id: ""
   });
 
+  const departmentOptions = [
+    "Computer Science",
+    "Electrical Engineering",
+    "Mechanical Engineering",
+    "Biomedical Engineering",
+    "Neuroscience",
+    "Biology",
+    "Chemistry",
+    "Physics",
+    "Mathematics",
+    "Psychology",
+    "Economics"
+  ];
+
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [errors, setErrors] = useState({});
@@ -261,13 +275,19 @@ const EditProfProfile = () => {
           </div>
           <div>
             <label className="text-2xl font-normal">Department:</label>
-            <input
-              type="text"
+            <select
               name="department"
               value={formData.department}
               onChange={handleChange}
               className={`w-full h-10 bg-gray-300 rounded px-2 text-xl ${errors.department ? 'border-2 border-red-500' : ''}`}
-            />
+            >
+              <option value="">Select Department</option>
+              {departmentOptions.map((dept, index) => (
+                <option key={index} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
             {errors.department && <p className="text-red-500">{errors.department}</p>}
           </div>
         </div>
