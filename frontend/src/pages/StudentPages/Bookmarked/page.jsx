@@ -109,37 +109,27 @@ const toggleBookmark = (e, id) => {
             {/* Header Row for the Table */}
             <tr className="text-sm text-[#555555]">
               {/* Table Header Cells */}
-              <th className="pl-2 w-12"></th>
               <th className="pl-2 text-center w-32">Job Title</th>
               <th className="pl-2 text-center w-32">Lab</th>
               <th className="pl-2 text-center w-32">Professor</th>
               <th className="pl-2 text-center w-20">Post ID</th>
-              <th className="pl-2 text-center w-32">Role</th>
               <th className="pl-2 text-center w-32">Date Posted</th>
-              <th className="pl-2 w-20"></th>
-              <th className="pl-2 w-20"></th>
+              <th className="pl-2 w-10"></th>
+              <th className="pl-2 w-10"></th>
             </tr>
           </thead>
           <tbody className="bg-[#f6B586]">
             {/* Bookmarked Posts Information */}
             {bookmarkedJobs.map((bookmark) => (
               <tr key={bookmark.job_id} className="text-lg text-center border-b">
-                <td className="p-2">
-                  <img
-                    src={'https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg'}
-                    alt="Profile"
-                    className="ml-4 w-10 h-10 rounded-full"
-                  />
-                </td>
                 <td className="p-2">{bookmark.job_title}</td>
                 <td className="p-2">{bookmark.lab_name}</td>
                 <td className="p-2">{bookmark.professorName}</td>
-                <td className="p-2">{bookmark.job_id}</td>
                 <td className="p-2">{bookmark.job_title}</td>
                 <td className="p-2">
                   {new Date(bookmark.created_at).toLocaleString()}
                 </td>
-                <td className="p-2 text-right pr-8">
+                <td className="p-2 text-center">
                   {/* Button to Go to the Bookmarked Post */}
                   <button
                     onClick={() => navigate(`/jobDetails/${bookmark.job_id}`)}
