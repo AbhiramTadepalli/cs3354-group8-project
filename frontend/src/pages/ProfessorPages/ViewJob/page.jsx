@@ -6,45 +6,7 @@ import { requestToUrl } from '../../../modules/requestHelpers';
 
 const ViewPostedJobs = () => {
 
-  const dummyApplications = [
-    {
-      appID: "",
-      profilePicUrl: "",
-      dateApplied: "04/02/2025",
-      student: 'Hank Pym',
-      graduation: 'Fall 2025',
-      exp: '2 semesters',
-      major: 'Computer Science',
-      weeklyHours: '5 hrs',
-      status: "Applied",
-      link: '/app_id'
-    },
-    {
-      appID: "",
-      profilePicUrl: "",
-      dateApplied: "03/22/2025",
-      student: 'Peter Parker',
-      graduation: 'Fall 2026',
-      exp: '1 semester',
-      major: 'Data Science',
-      weeklyHours: '4 hrs',
-      status: "Review",
-      link: '/app_id'
-    },
-    {
-      appID: "",
-      profilePicUrl: "",
-      dateApplied: "04/05/2025",
-      student: 'Sandy Cooper',
-      graduation: 'Spring 2025',
-      exp: 'None',
-      major: 'Mathematics',
-      weeklyHours: '2 hrs',
-      status: "Accepted",
-      link: '/app_id'
-    },
-  ];
-
+  
   const [jobApplications, setJobApplications] = useState([]); // State to hold job applications
 
   const { job_id } = useParams(); // Get the job ID from the URL parameters
@@ -86,7 +48,22 @@ const ViewPostedJobs = () => {
 
     fetchApplicationsAndStudents();
   }, []);
-
+  
+// Function to determine status color
+const getStatusColor = (status) => {
+  switch (status.toLowerCase()) {
+    case "submitted":
+      return "bg-pink-500 text-white";
+    case "review":
+      return "bg-purple-500 text-white";
+    case "accepted":
+      return "bg-purple-700 text-white";
+    case "rejected":
+      return "bg-red-500 text-white";
+    default:
+      return "bg-gray-500 text-white";
+  }
+};
 
   return (
     <div className="bg-background_clr min-h-screen">
@@ -120,18 +97,20 @@ const ViewPostedJobs = () => {
                   key={application.application_id}
                   className="grid grid-cols-9 p-3 border-b border-orange-300 items-center hover:bg-orange-100 transition"
                 >
-                  <div>{`${application.student.first_name} ${application.student.last_name}`}</div>
-                  <div>{new Date(application.submission_date).toLocaleDateString('en-US')}</div>
-                  <div>{application.student.graduation_year}</div>
+                  <div className='p-1'>{`${application.student.first_name} ${application.student.last_name}`}</div>
+                  <div className='p-1'>{new Date(application.submission_date).toLocaleDateString('en-US')}</div>
+                  <div className='p-1'>{application.student.graduation_year}</div>
                   <div className="">{application.research_experience}</div>
-                  <div>{application.student.major}</div>
-                  <div>{application.hours_per_week}</div>
-                  <div>
-                    <span className="rounded-3xl px-4 py-1 bg-light_pink_clr text-sm font-semibold">
-                      {application.status}
-                    </span>
+                  <div className='p-1'>{application.student.major}</div>
+                  <div className='p-1'>{application.hours_per_week}</div>
+                  <div className='p-1'>
+                    {application.status && (
+                      <span className={`rounded-3xl px-4 py-1 bg-light_pink_clr text-sm font-semibold ${getStatusColor(application.status)}`}>
+                        {application.status}
+                      </span>)
+                    }
                   </div>
-                  <div className="text-right">
+                  <div className="text-left">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
