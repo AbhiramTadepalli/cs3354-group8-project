@@ -1,5 +1,3 @@
-//Nidhi Majoju
-//this is the use case to create an account
 import React, { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,8 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 const CreateAccountPage = () => {
   const navigate = useNavigate();
   
-  // Initialize with 'student' as the default role
-  const [selectedRole, setSelectedRole] = useState('student');
+  // Initialize with 'role' as the default role
+  const [selectedRole, setSelectedRole] = useState('role');
   
   // Form data state
   const [formData, setFormData] = useState({
