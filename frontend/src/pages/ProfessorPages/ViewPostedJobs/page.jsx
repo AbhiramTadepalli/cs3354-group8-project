@@ -79,59 +79,89 @@ const ViewPostedJobs = () => {
 
   return (
     <div className="bg-background_clr min-h-screen">
-      <NavBarProfessor></NavBarProfessor>
-      <div className="pb-8 pl-8 pr-8">
-        <h1 className="text-4xl font-bold mb-4">View Posted Jobs</h1>
-
-        <table className="w-full border-separate border-spacing-y-3 px-12">
-          <thead>
-            {/* Table header */}
-            <tr className="text-sm text-gray-600">
-              {/* Table header column names */}
-              <th className="pl-2 w-12"></th>
-              <th className="text-center w-32">Job Title</th>
-              <th className="text-center w-32">Date Posted</th>
-              <th className="text-center w-32">Job ID</th>
-              <th className="text-center w-32">Applied</th>
-              <th className="text-center w-32">Accepted</th>
-              <th className="text-center w-32">Rejected</th>
-              <th className="text-center w-32"></th>
-            </tr>
-          </thead>
-          <tbody className="bg-orange_clr">
-            {/* Posted Jobs */}
-            {jobPostings.map((job) => (
-              /* Each row is a Job the professor has posted */
-              <tr 
-                key={job.job_id} 
-                className="text-lg text-center border-b hover:bg-orange-200 cursor-pointer"
-                onClick={() => window.location.href = `/editJob/${job.job_id}`}
-              >
-                <td className="p-2"></td>
-                <td className="p-2">{job.job_title}</td>
-                <td className="p-2">{new Date(job.created_at).toLocaleDateString('en-US')}</td>
-                <td className="p-2">{job.job_id}</td>
-                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].length : 0}</td>
-                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] === 'accepted' ? 1 : 0), 0) : 0}</td>
-                <td className="p-2">{jobApplications && jobApplications[job.job_id] ? jobApplications[job.job_id].reduce((acc, application) => acc + (application["status"] === 'rejected' ? 1 : 0), 0) : 0}</td>
-                <td className="p-2 text-right pr-8">
-                  <button 
-                    className="px-4 py-2 text-dark_pink_clr rounded"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Stop the row click event from triggering
-                      window.location.href = `/viewJob/${job.job_id}`; // Navigate to applications view instead
-                    }}
-                  >
-                    View Applications
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <NavBarProfessor />
+      <div className="mt-16 px-6">
+        <h1 className="text-4xl font-bold mb-6">View Posted Jobs</h1>
+        {jobPostings.length > 0 ? (
+          <div className="bg-white rounded-lg overflow-hidden shadow">
+            {/* Table Header */}
+            <div className="grid grid-cols-7 bg-white p-4 border-b text-sm font-medium text-gray-600">
+              <div>Job Title</div>
+              <div>Date Posted</div>
+              <div>Job ID</div>
+              <div>Applied</div>
+              <div>Accepted</div>
+              <div>Rejected</div>
+              <div>Action</div>
+            </div>
+  
+            {/* Table Body */}
+            <div className="bg-orange-200">
+              {jobPostings.map((job) => (
+                <div
+                  key={job.job_id}
+                  className="grid grid-cols-7 p-3 border-b border-orange-300 items-center hover:bg-orange-100 cursor-pointer transition"
+                  onClick={() => window.location.href = `/editJob/${job.job_id}`}
+                >
+                  <div>{job.job_title}</div>
+                  <div>{new Date(job.created_at).toLocaleDateString('en-US')}</div>
+                  <div>{job.job_id}</div>
+                  <div>
+                    {jobApplications && jobApplications[job.job_id]
+                      ? jobApplications[job.job_id].length
+                      : 0}
+                  </div>
+                  <div>
+                    {jobApplications && jobApplications[job.job_id]
+                      ? jobApplications[job.job_id].reduce(
+                          (acc, application) =>
+                            acc + (application["status"] === "accepted" ? 1 : 0),
+                          0
+                        )
+                      : 0}
+                  </div>
+                  <div>
+                    {jobApplications && jobApplications[job.job_id]
+                      ? jobApplications[job.job_id].reduce(
+                          (acc, application) =>
+                            acc + (application["status"] === "rejected" ? 1 : 0),
+                          0
+                        )
+                      : 0}
+                  </div>
+                  <div className="text-right">
+                    <button
+                      className="px-4 py-2 bg-orange-300 text-dark_pink_clr rounded text-xs font-medium hover:bg-orange-400"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.location.href = `/viewJob/${job.job_id}`;
+                      }}
+                    >
+                      View Applications
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white p-8 rounded-lg shadow text-center">
+            <h2 className="text-xl font-bold mb-2">No Jobs Posted</h2>
+            <p className="text-gray-600 mb-4">
+              You haven't posted any jobs yet.
+            </p>
+            <a
+              href="/postJob"
+              className="inline-block px-4 py-2 bg-orange-300 text-black rounded-md hover:bg-orange-400"
+            >
+              Post a Job
+            </a>
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
+  
 }
 
 export default ViewPostedJobs

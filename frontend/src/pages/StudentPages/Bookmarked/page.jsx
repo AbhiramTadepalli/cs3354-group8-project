@@ -95,67 +95,80 @@ const toggleBookmark = (e, id) => {
 
 
 
-  return (
-    <div className="w-screen h-screen bg-red-50 p-8">
-      {/* Top Navigation */}
-      <NavBarStudent />
-      <div className="pb-8 pl-8 pr-8">
-        {/* Bookmarked Posts Header */}
-        <h1 className="text-4xl font-bold mb-4">Bookmarked Posts</h1>
+return (
+  <div className="min-h-screen bg-red-50 p-8">
+    {/* Top Navigation */}
+    <NavBarStudent />
 
+    <div className="mt-16 px-6">
+      <h1 className="text-4xl font-bold mb-6">Bookmarked Posts</h1>
+      {bookmarkedJobs.length > 0 ? (
+        <div className="bg-white rounded-lg overflow-hidden shadow">
+          {/* Table Header */}
+          <div className="grid grid-cols-7 bg-white p-4 border-b text-sm font-medium text-gray-600">
+            <div>Job Title</div>
+            <div>Lab</div>
+            <div>Professor</div>
+            <div>Post ID</div>
+            <div>Date Posted</div>
+            <div>Action</div>
+            <div>Bookmark</div>
+          </div>
 
-        <table className="w-full border-separate border-spacing-y-2">
-          <thead>
-            {/* Header Row for the Table */}
-            <tr className="text-sm text-[#555555]">
-              {/* Table Header Cells */}
-              <th className="pl-2 text-center w-32">Job Title</th>
-              <th className="pl-2 text-center w-32">Lab</th>
-              <th className="pl-2 text-center w-32">Professor</th>
-              <th className="pl-2 text-center w-20">Post ID</th>
-              <th className="pl-2 text-center w-32">Date Posted</th>
-              <th className="pl-2 w-10"></th>
-              <th className="pl-2 w-10"></th>
-            </tr>
-          </thead>
-          <tbody className="bg-[#f6B586]">
-            {/* Bookmarked Posts Information */}
+          {/* Table Body */}
+          <div className="bg-orange-200">
             {bookmarkedJobs.map((bookmark) => (
-              <tr key={bookmark.job_id} className="text-lg text-center border-b">
-                <td className="p-2">{bookmark.job_title}</td>
-                <td className="p-2">{bookmark.lab_name}</td>
-                <td className="p-2">{bookmark.professorName}</td>
-                <td className="p-2">{bookmark.job_title}</td>
-                <td className="p-2">
-                  {new Date(bookmark.created_at).toLocaleString()}
-                </td>
-                <td className="p-2 text-center">
-                  {/* Button to Go to the Bookmarked Post */}
+              <div
+                key={bookmark.job_id}
+                className="grid grid-cols-7 p-3 border-b border-orange-300 items-center"
+              >
+                <div>{bookmark.job_title}</div>
+                <div>{bookmark.lab_name}</div>
+                <div>{bookmark.professorName}</div>
+                <div>{bookmark.job_id}</div>
+                <div>
+                  {new Date(bookmark.created_at).toLocaleDateString('en-US')}
+                </div>
+                <div>
                   <button
                     onClick={() => navigate(`/jobDetails/${bookmark.job_id}`)}
-                    className="px-4 py-2 text-[#F14696] rounded"
+                    className="px-3 py-1 bg-orange-300 text-pink-500 rounded-md text-xs font-medium"
                   >
                     View Post
                   </button>
-                </td>
-                {/* Toggle Bookmark Icon */}
-                <td
+                </div>
+                <div
                   onClick={(e) => toggleBookmark(e, bookmark.job_id)}
-                  className="cursor-pointer"
+                  className="cursor-pointer flex justify-start"
                 >
                   {bookmark.bookmarked ? (
-                    <FaBookmark className="text-xl text-dark_pink_clr" />
+                    <FaBookmark className="text-xl text-pink-600" />
                   ) : (
                     <FiBookmark className="text-xl" />
                   )}
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white p-8 rounded-lg shadow text-center">
+          <h2 className="text-xl font-bold mb-2">No Bookmarks Found</h2>
+          <p className="text-gray-600 mb-4">
+            You haven't bookmarked any posts yet.
+          </p>
+          <a
+            href="/searchPage"
+            className="inline-block px-4 py-2 bg-orange-300 text-black rounded-md hover:bg-orange-400"
+          >
+            Browse Positions
+          </a>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 

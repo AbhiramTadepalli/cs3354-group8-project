@@ -90,67 +90,74 @@ const ViewPostedJobs = () => {
 
   return (
     <div className="bg-background_clr min-h-screen">
-      <NavBarProfessor></NavBarProfessor>
-      <div className="pb-8 pl-8 pr-8">
-        <h1 className="text-4xl font-bold mb-4">Job #1 Name - Research Assistant Applications</h1>
-        <h3 className="text-xl font-semibold text-gray-500 mb-4">#123456 — Posted on: MM/DD/YYYY — 8 Applications </h3>
-
-        <table className="w-full border-separate border-spacing-y-3 px-12">
-          <thead>
-            {/* Table header */}
-            <tr className="text-sm text-gray-600">
-              {/* Table header column names */}
-              <th className="pl-2 w-12"></th>
-              <th className="text-center w-32">Student</th>
-              <th className="text-center w-32">Date Applied</th>
-              <th className="text-center w-32">Graduation</th>
-              <th className="text-center w-32">Research Experience</th>
-              <th className="text-center w-32">Major</th>
-              <th className="text-center w-32">Hours Per Week</th>
-              <th className="text-center w-32">Status</th>
-              <th className="text-center w-32"></th> {/* Blank column header, but columns have a button/hyperlink */}
-            </tr>
-          </thead>
-          <tbody className="bg-orange_clr">
-            {/* Posted Jobs */}
-            {jobApplications.map((application) => (
-              /* Each row is a Student Application for the Job */
-              <tr key={application.application_id} className="text-lg text-center border-b">
-                <td className="p-2 text-center">
-                  <img
-                    src={application.profilePicUrl}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                </td>
-                <td className="p-2">{`${application.student.first_name} ${application.student.last_name}`}</td>
-                <td className="p-2">{new Date(application.submission_date).toLocaleDateString('en-US')}</td>
-                <td className="p-2">{application.student.graduation_year}</td>
-                <td className="p-2 text-sm">{application.research_experience}</td>
-                <td className="p-2">{application.student.major}</td>
-                <td className="p-2">{application.hours_per_week}</td>
-                <td className="flex justify-center items-center p-2">
-                  <div className='rounded rounded-3xl w-fit p-2 px-4 bg-light_pink_clr'>
-                    {application.status}
+      <NavBarProfessor />
+      <div className="mt-16 px-6">
+        <h1 className="text-4xl font-bold mb-4">
+          Job #1 Name - Research Assistant Applications
+        </h1>
+        <h3 className="text-xl font-semibold text-gray-500 mb-6">
+          #123456 - Posted on: MM/DD/YYYY - 8 Applications
+        </h3>
+  
+        {jobApplications.length > 0 ? (
+          <div className="bg-white rounded-lg overflow-hidden shadow">
+            {/* Table Header */}
+            <div className="grid grid-cols-9 bg-white p-4 border-b text-sm font-medium text-gray-600">
+              <div>Student</div>
+              <div>Date Applied</div>
+              <div>Graduation</div>
+              <div>Research Experience</div>
+              <div>Major</div>
+              <div>Hours Per Week</div>
+              <div>Status</div>
+              <div>Action</div>
+            </div>
+  
+            {/* Table Body */}
+            <div className="bg-orange-200">
+              {jobApplications.map((application) => (
+                <div
+                  key={application.application_id}
+                  className="grid grid-cols-9 p-3 border-b border-orange-300 items-center hover:bg-orange-100 transition"
+                >
+                  <div>{`${application.student.first_name} ${application.student.last_name}`}</div>
+                  <div>{new Date(application.submission_date).toLocaleDateString('en-US')}</div>
+                  <div>{application.student.graduation_year}</div>
+                  <div className="">{application.research_experience}</div>
+                  <div>{application.student.major}</div>
+                  <div>{application.hours_per_week}</div>
+                  <div>
+                    <span className="rounded-3xl px-4 py-1 bg-light_pink_clr text-sm font-semibold">
+                      {application.status}
+                    </span>
                   </div>
-                </td>
-                <td className="p-2 text-right pr-8">
-                  <button onClick={(e) => {
-                    e.stopPropagation();
-                    window.location.href = `/viewJob/${job_id}/viewStudentApplication/${application.application_id}`
-                  }} /* Need to implement navigation logic */
-                    className="px-4 py-2 text-dark_pink_clr rounded"
-                  >
-                    View Applications
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  <div className="text-right">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.location.href = `/viewJob/${job_id}/viewStudentApplication/${application.application_id}`;
+                      }}
+                      className="px-4 py-2 bg-orange-300 text-dark_pink_clr rounded text-xs font-medium hover:bg-orange-400"
+                    >
+                      View Application
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white p-8 rounded-lg shadow text-center">
+            <h2 className="text-xl font-bold mb-2">No Applications Found</h2>
+            <p className="text-gray-600 mb-4">
+              No students have applied to this position yet.
+            </p>
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
+  
 }
 
 export default ViewPostedJobs
