@@ -8,8 +8,11 @@ const ViewPostedJobs = () => {
 
   
   const [jobApplications, setJobApplications] = useState([]); // State to hold job applications
+  const [job, setJob] = useState(); // State to hold job applications
 
   const { job_id } = useParams(); // Get the job ID from the URL parameters
+
+
   const application_request = {
     "job_id": job_id
   }
@@ -46,7 +49,24 @@ const ViewPostedJobs = () => {
       }
     };
 
+    const fetchJobDetails = async () => {
+      try {
+        // 1. Fetch job 
+        const appRes = await fetch('http://localhost:5002/GET/Job/one' + requestToUrl(application_request), {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (!appRes.ok) throw new Error('Network response was not ok');
+        const job = await appRes.json();
+
+        setJob(job[0]);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
     fetchApplicationsAndStudents();
+    fetchJobDetails();
   }, []);
   
 // Function to determine status color
@@ -70,10 +90,10 @@ const getStatusColor = (status) => {
       <NavBarProfessor />
       <div className="mt-16 px-6">
         <h1 className="text-4xl font-bold mb-4">
-          Job #1 Name - Research Assistant Applications
+          {job ? `${job.job_title} - ${job.lab_name}` : 'Applications for Job Posting'}
         </h1>
         <h3 className="text-xl font-semibold text-gray-500 mb-6">
-          #123456 - Posted on: MM/DD/YYYY - 8 Applications
+          {job && jobApplications ? `ID: ${job.job_id} - Posted on: ${new Date(job.created_at).toLocaleDateString('en-US')} - ${jobApplications.length} Applications` : ''}
         </h3>
   
         {jobApplications.length > 0 ? (
