@@ -151,7 +151,7 @@ const ViewPostedJobs = () => {
               You haven't posted any jobs yet.
             </p>
             <a
-              href="/postJob"
+              href="/addJob"
               className="inline-block px-4 py-2 bg-orange-300 text-black rounded-md hover:bg-orange-400"
             >
               Post a Job
