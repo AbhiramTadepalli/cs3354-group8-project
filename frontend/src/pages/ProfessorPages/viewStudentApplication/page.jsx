@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom';
 
 // Status styling
 const statusColors = {
-  draft: 'bg-gray-200 text-gray-800',
-  submitted: 'bg-blue-200 text-blue-800',
-  under_review: 'bg-yellow-200 text-yellow-800',
-  accepted: 'bg-green-200 text-green-800',
-  rejected: 'bg-red-200 text-red-800'
+  draft: 'bg-gray-500 text-white',
+  submitted: 'bg-pink-500 text-white',
+  under_review: 'bg-purple-500 text-white',
+  accepted: 'bg-purple-700 text-white',
+  rejected: 'bg-red-500 text-white'
 };
 
 const statusLabels = {

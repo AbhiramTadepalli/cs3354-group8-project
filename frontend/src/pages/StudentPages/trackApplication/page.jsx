@@ -148,14 +148,14 @@ const TrackApplication = () => {
 
   // Function to determine status color
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Applied":
+    switch (status.toLowerCase()) {
+      case "submitted":
         return "bg-pink-500 text-white";
-      case "Review":
+      case "review":
         return "bg-purple-500 text-white";
-      case "Accepted":
+      case "accepted":
         return "bg-purple-700 text-white";
-      case "Rejected":
+      case "rejected":
         return "bg-red-500 text-white";
       default:
         return "bg-gray-500 text-white";
