@@ -64,13 +64,13 @@ exports.addProfessor = async (req, res) => {
 // Controller function to modify fields for an existing Professor in the table
 exports.modifyProfessor = async (req, res) => {
     try {
-        const { user_id, professor_id, email, password, first_name, last_name, net_id, department, phone_no } = req.body;
+        const { user_id, professor_id, email, password_hash, first_name, last_name, net_id, department, phone_no } = req.body;
         await db.promise().beginTransaction(); // start a transaction
 
         // Modify the professor's info in the Users table
         const [userResult] = await db.promise().query(
             'UPDATE Users SET email = ?, password_hash = ?, first_name = ?, last_name = ? WHERE user_id = ?',
-            [email, password, first_name, last_name, user_id] // pass data in to modify
+            [email, password_hash, first_name, last_name, user_id] // pass data in to modify
         );
 
         // Modify the entry in the Professors table

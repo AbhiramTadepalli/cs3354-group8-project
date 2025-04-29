@@ -179,7 +179,7 @@ const EditProfProfile = () => {
         phone_no: formData.phone_no,
         department: formData.department,
         net_id: formData.net_id,
-        password: formData.password_hash
+        password_hash: formData.password_hash
       };
   
       const response = await fetch('http://localhost:5002/POST/Professor/modify', {
