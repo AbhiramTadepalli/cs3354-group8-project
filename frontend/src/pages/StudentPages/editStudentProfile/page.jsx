@@ -218,37 +218,38 @@ const EditStudentProfile = () => {
             </div>
           ))}
 
-          {/* Major Dropdown */}
-          <div>
-            <label className="text-xl">Major</label>
-            <select
-              name="major"
-              value={formData.major}
-              onChange={handleChange}
-              className="w-full h-10 bg-gray-200 rounded px-2 text-lg"
-            >
-              <option value="">Select a major</option>
-              {majors.map((major) => (
-                <option key={major} value={major}>{major}</option>
-              ))}
-            </select>
-          </div>
+{/* Major Dropdown */}
+<div>
+  <label className="text-xl">Major</label>
+  <select
+    name="major"
+    value={formData.major}
+    onChange={handleChange}
+    className="w-full h-10 bg-gray-200 rounded px-2 text-lg"
+  >
+    <option value="">Select a major</option>
+    {[formData.major, ...majors.filter((m) => m !== formData.major)].map((major) => (
+      <option key={major} value={major}>{major}</option>
+    ))}
+  </select>
+</div>
 
-          {/* Graduation Year Dropdown */}
-          <div>
-            <label className="text-xl">Graduation Year</label>
-            <select
-              name="graduation_year"
-              value={formData.graduation_year}
-              onChange={handleChange}
-              className="w-full h-10 bg-gray-200 rounded px-2 text-lg"
-            >
-              <option value="">Select year</option>
-              {graduationYears.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
+{/* Graduation Year Dropdown */}
+<div>
+  <label className="text-xl">Graduation Year</label>
+  <select
+    name="graduation_year"
+    value={formData.graduation_year}
+    onChange={handleChange}
+    className="w-full h-10 bg-gray-200 rounded px-2 text-lg"
+  >
+    <option value="">Select year</option>
+    {[formData.graduation_year, ...graduationYears.filter((y) => y !== formData.graduation_year)].map((year) => (
+      <option key={year} value={year}>{year}</option>
+    ))}
+  </select>
+</div>
+
         </div>
       </div>
 

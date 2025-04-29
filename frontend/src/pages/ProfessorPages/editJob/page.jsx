@@ -4,7 +4,6 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { requestToUrl } from '../../../modules/requestHelpers';
 
 const EditJob = () => {
-  // Use job_id instead of jobId to match the route parameter
   const { job_id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -70,8 +69,29 @@ const EditJob = () => {
               formattedDeadline = deadlineDate.toISOString().split('T')[0];
             }
             
+            // Process compensation to remove "$" or "/hr" and keep only numeric part
+            let compensationValue = '';
+            if (job.compensation) {
+              compensationValue = job.compensation.replace(/[^0-9.]/g, '');
+            }
+            
             // Parse skills from semicolon-delimited string to array
             const skillsArray = job.req_skills ? job.req_skills.split(';').filter(skill => skill !== '') : [];
+            
+            // Format the term properly
+            const normalizedTerm = normalizeTermValue(job.term);
+            console.log("Original term:", job.term);
+            console.log("Normalized term:", normalizedTerm);
+            
+            // Format the minimum GPA properly
+            const normalizedGPA = normalizeGpaValue(job.req_min_gpa);
+            console.log("Original GPA:", job.req_min_gpa);
+            console.log("Normalized GPA:", normalizedGPA);
+            
+            // Format the major properly
+            const normalizedMajor = normalizeMajorValue(job.req_majors);
+            console.log("Original major:", job.req_majors);
+            console.log("Normalized major:", normalizedMajor);
             
             // Update form data with job details
             setFormData({
@@ -79,18 +99,32 @@ const EditJob = () => {
               labName: job.lab_name || '',
               jobDescription: job.job_description || '',
               weeklyHours: job.hours || 10,
-              term: job.term || '',
-              compensation: job.compensation || '',
-              requiredMajors: job.req_majors || '',
+              term: normalizedTerm,
+              compensation: compensationValue,
+              requiredMajors: normalizedMajor,
               requiredGradeLevel: job.req_grade_level || '',
-              minimumGPA: job.req_min_gpa || '3.0',
+              minimumGPA: normalizedGPA,
               requiredSkills: skillsArray,
               applicationDeadline: formattedDeadline,
               readingMaterials: job.reading_materials || '',
               status: job.status || 'open'
             });
             
-            console.log("Form data set successfully");
+            console.log("Form data set successfully:", {
+              jobTitle: job.job_title || '',
+              labName: job.lab_name || '',
+              jobDescription: job.job_description || '',
+              weeklyHours: job.hours || 10,
+              term: normalizedTerm,
+              compensation: compensationValue,
+              requiredMajors: normalizedMajor,
+              requiredGradeLevel: job.req_grade_level || '',
+              minimumGPA: normalizedGPA,
+              requiredSkills: skillsArray,
+              applicationDeadline: formattedDeadline,
+              readingMaterials: job.reading_materials || '',
+              status: job.status || 'open'
+            });
           } else {
             console.log("No job data found or empty response");
             alert("No job data found for the given ID");
@@ -111,20 +145,87 @@ const EditJob = () => {
     }
   }, [job_id, navigate]);
   
+  // Function to normalize term format
+  const normalizeTermValue = (term) => {
+    // Handle different term formats
+    if (!term) return '';
+    
+    // If term is already a valid option value, return it
+    if (termOptions.some(option => option.value === term)) {
+      return term;
+    }
+    
+    // If term is in the "Summer 2026" format, convert to "summer_2026"
+    if (term.includes(' ')) {
+      const parts = term.split(' ');
+      if (parts.length === 2) {
+        return `${parts[0].toLowerCase()}_${parts[1]}`;
+      }
+    }
+    
+    return term;
+  };
+  
+  // Function to normalize GPA value
+  const normalizeGpaValue = (gpa) => {
+    if (!gpa) return '3.0'; // Default value
+    
+    try {
+      // Make sure it's treated as a string first
+      const gpaString = String(gpa);
+      
+      // Try to parse it as a float for comparison
+      const gpaFloat = parseFloat(gpaString);
+      
+      // Round to 1 decimal place to match the options format
+      return gpaFloat.toFixed(1);
+    } catch (e) {
+      console.error("Error normalizing GPA:", e);
+      return '3.0';
+    }
+  };
+  
+  // Function to normalize major value
+  const normalizeMajorValue = (major) => {
+    if (!major) return '';
+    
+    // If it's already in lowercase with underscores, return as is
+    if (major.includes('_')) {
+      return major;
+    }
+    
+    // Convert "Biology" to "biology"
+    return major.toLowerCase();
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted with data:', formData);
     
+    // Get professor_id from localStorage
+    let professor_id = '1'; // Default fallback value
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const parsedUserData = JSON.parse(userData);
+        if (parsedUserData.professor_id) {
+          professor_id = parsedUserData.professor_id;
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+    
     // Format the data for the backend
     const requestData = {
       job_id: job_id,
-      professor_id: JSON.parse(localStorage.getItem('user'))['professor_id'] || '1',
+      professor_id: professor_id,
       job_title: formData.jobTitle,
       lab_name: formData.labName,
       job_description: formData.jobDescription,
       hours: formData.weeklyHours,
       term: formData.term,
-      compensation: formData.compensation || '0',
+      compensation: `$${formData.compensation}`, // Add dollar sign prefix
       req_majors: formData.requiredMajors,
       req_grade_level: formData.requiredGradeLevel,
       req_min_gpa: formData.minimumGPA,
@@ -163,6 +264,7 @@ const EditJob = () => {
     }
   };
 
+  // Define options arrays outside the component to avoid recreation on render
   const majorOptions = [
     { value: 'computer_science', label: 'Computer Science' },
     { value: 'electrical_engineering', label: 'Electrical Engineering' },
@@ -213,16 +315,10 @@ const EditJob = () => {
     { value: 'microscopy', label: 'Microscopy' }
   ];
 
-  const gpaOptions = [];
-  for (let i = 0; i <= 4; i += 0.1) {
-    gpaOptions.push({
-      value: i.toFixed(1),
-      label: i.toFixed(1)
-    });
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Field ${name} changed to:`, value);
+    
     setFormData({
       ...formData,
       [name]: value
@@ -256,6 +352,15 @@ const EditJob = () => {
         </div>
       </div>
     );
+  }
+
+  // Generate GPA options
+  const gpaOptions = [];
+  for (let i = 0; i <= 4; i += 0.1) {
+    gpaOptions.push({
+      value: i.toFixed(1),
+      label: i.toFixed(1)
+    });
   }
 
   return (
