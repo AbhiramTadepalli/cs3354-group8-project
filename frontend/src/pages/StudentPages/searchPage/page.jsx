@@ -311,7 +311,7 @@ const SearchPage = () => {
   // Apply filters whenever a filter changes or sort changes
   useEffect(() => {
     applyFilters();
-  }, [selectedMajor, selectedProfessor, selectedTerm, sortBy]);
+  }, [selectedMajor, selectedProfessor, selectedTerm, sortBy, listings]);
 
   const toggleBookmark = (e, id) => {
     e.stopPropagation();
